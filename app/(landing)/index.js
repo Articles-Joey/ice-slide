@@ -15,6 +15,7 @@ import { useLocalStorageNew } from '@/hooks/useLocalStorageNew';
 import IsDev from '@/components/UI/IsDev';
 // import { ChromePicker } from 'react-color';
 import { useSocketStore } from '@/hooks/useSocketStore';
+import { useIceSlideStore } from '@/hooks/useIceSlideStore';
 
 // import GameScoreboard from 'components/Games/GameScoreboard'
 
@@ -49,6 +50,9 @@ export default function DeathRaceLobbyPage() {
     } = useSocketStore(state => ({
         socket: state.socket,
     }));
+
+    const theme = useIceSlideStore(state => state.theme);
+    const toggleTheme = useIceSlideStore(state => state.toggleTheme);
 
     // const userReduxState = useSelector((state) => state.auth.user_details)
     const userReduxState = false
@@ -252,7 +256,7 @@ export default function DeathRaceLobbyPage() {
 
                         </div>
 
-                        <div className='small fw-bold  mt-3 mb-1'>Or</div>
+                        {/* <div className='small fw-bold  mt-3 mb-1'>Or</div> */}
 
                         {/* <div className='d-flex'>
 
@@ -321,7 +325,12 @@ export default function DeathRaceLobbyPage() {
                             Rules & Controls
                         </ArticlesButton>
 
-                        <Link href={'/'} className='w-50'>
+                        <Link
+                            href={'https://github.com/Articles-Joey/ice-slide'}
+                            className='w-50'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                        >
                             <ArticlesButton
                                 className={`w-100`}
                                 small
@@ -329,8 +338,8 @@ export default function DeathRaceLobbyPage() {
 
                                 }}
                             >
-                                <i className="fad fa-sign-out fa-rotate-180"></i>
-                                Leave Game
+                                <i className="fab fa-github"></i>
+                                GitHub
                             </ArticlesButton>
                         </Link>
 
@@ -345,6 +354,17 @@ export default function DeathRaceLobbyPage() {
                         >
                             <i className="fad fa-users"></i>
                             Credits
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            small
+                            className="w-50 mt-3"
+                            onClick={() => {
+                                toggleTheme()
+                            }}
+                        >
+                            <i className="fad fa-eye-dropper me-2"></i>
+                            {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
                         </ArticlesButton>
 
                     </div>

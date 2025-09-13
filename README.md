@@ -1,6 +1,8 @@
-# Death Race
+# Ice Slide
 
-Four player capture the flag game. Each player gets three bugs to start, if you lose all your bugs and you are eliminated. You can cross into other frogs zones to take their bugs but if they touch you while in their zone they send you back to your zone and stun you for a short period. Random powerups spawn at certain times that can change certain aspects of the game.
+![Game Preview](/public/img/game-preview.webp)
+
+Get your tire as close to the target in the center as possible. Watch out for other players and obstacles. Collect the barrels to earn bonus points!
 
 ## Getting Started
 
@@ -13,3 +15,13 @@ npm run dev
 ## Multiplayer
 
 Aiming to have multiplayer via P2P and Websockets. Websocket backend code is not in this repo or available at this time. P2P code will be included here.
+
+## Inspiration
+
+This game was inspired by a mini game inside the game Toontown Online.
+
+[Ice Slide trolley game info](https://toontown.fandom.com/wiki/Ice_Slide)
+
+## Attribution
+
+[Tire Icon](https://www.freepik.com/icon/road_12717324)

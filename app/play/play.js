@@ -92,8 +92,8 @@ export default function IceSlideGamePage() {
         setShowMenu
     }
 
-    const game_name = 'Move Match'
-    const game_key = 'move-match'
+    const game_name = 'Ice Slide'
+    const game_key = 'ice-slide'
 
     return (
 

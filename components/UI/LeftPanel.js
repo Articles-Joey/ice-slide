@@ -26,17 +26,12 @@ export default function LeftPanelContent(props) {
         setShowMenu
     } = props;
 
-    const {
-        hitRotation,
-        setHitRotation,
-        hitPower,
-        setHitPower
-    } = useIceSlideStore(state => ({
-        hitRotation: state.hitRotation,
-        setHitRotation: state.setHitRotation,
-        hitPower: state.hitPower,
-        setHitPower: state.setHitPower,
-    }));
+    const theme = useIceSlideStore(state => state.theme);
+    const toggleTheme = useIceSlideStore(state => state.toggleTheme);
+    const hitRotation = useIceSlideStore(state => state.hitRotation);
+    const setHitRotation = useIceSlideStore(state => state.setHitRotation);
+    const hitPower = useIceSlideStore(state => state.hitPower);
+    const setHitPower = useIceSlideStore(state => state.setHitPower);
 
     const {
         socket,
@@ -85,7 +80,7 @@ export default function LeftPanelContent(props) {
         }
         setHitPower(hitPowerRef.current - 1)
     });
-    
+
     useHotkeys(['Enter'], () => {
         console.log("Launch?")
     });
@@ -104,7 +99,7 @@ export default function LeftPanelContent(props) {
 
                     {!socket?.connected &&
                         <div
-                            className=""
+                            className="mb-3"
                         >
 
                             <div className="">
@@ -116,6 +111,7 @@ export default function LeftPanelContent(props) {
                                         console.log("Reconnect")
                                         socket.connect()
                                     }}
+                                    className="w-100"
                                 >
                                     Reconnect!
                                 </ArticlesButton>
@@ -146,13 +142,24 @@ export default function LeftPanelContent(props) {
                             if (isFullscreen) {
                                 exitFullscreen()
                             } else {
-                                requestFullscreen('maze-game-page')
+                                requestFullscreen('ice-slide-game-page')
                             }
                         }}
                     >
                         {isFullscreen && <span>Exit </span>}
                         {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
                         <span>Fullscreen</span>
+                    </ArticlesButton>
+
+                    <ArticlesButton
+                        small
+                        className="w-50"
+                        onClick={() => {
+                            toggleTheme()
+                        }}
+                    >
+                        <i className="fad fa-eye-dropper me-2"></i>
+                        {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
                     </ArticlesButton>
 
                 </div>
