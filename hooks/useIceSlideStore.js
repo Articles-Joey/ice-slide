@@ -10,15 +10,10 @@ import { persist } from 'zustand/middleware'
 // export const useIceSlideStore = create((set) => ({
 export const useIceSlideStore = create(persist((set) => ({
 
-    theme: "Light",
-    toggleTheme: () => {
+    launchPlayer: false,
+    setLaunchPlayer: (newValue) => {
         set((prev) => ({
-            theme: prev.theme === "Light" ? "Dark" : "Light"
-        }))
-    },
-    setTheme: (newValue) => {
-        set((prev) => ({
-            theme: newValue
+            launchPlayer: newValue
         }))
     },
 

@@ -20,8 +20,14 @@ Aiming to have multiplayer via P2P and Websockets. Websocket backend code is not
 
 This game was inspired by a mini game inside the game Toontown Online.
 
-[Ice Slide trolley game info](https://toontown.fandom.com/wiki/Ice_Slide)
+[Ice Slide Trolley Game](https://toontown.fandom.com/wiki/Ice_Slide)
 
 ## Attribution
 
-[Tire Icon](https://www.freepik.com/icon/road_12717324)
+[Tire Icon - Freepik](https://www.freepik.com/icon/road_12717324)  
+[Logo - Textstudio](https://www.textstudio.com/logo/ice-cube-3d-text-8)  
+[Wheel Model - Quaternius](https://poly.pizza/m/UQg9S2RE0x)  
+[Rocks Model - kenney.nl](https://kenney.nl/assets/graveyard-kit)  
+[Igloo Model - Google](https://poly.pizza/m/d-ad5gtnq8Z)  
+[Iceberg Model - Google](https://poly.pizza/m/8sqTOfIjWml)  
+[Ref Flag Model - kenney.nl](https://kenney.nl/assets/minigolf-kit)

@@ -16,6 +16,10 @@ export const useSocketStore = create((set) => ({
             reconnection: true,
             reconnectionDelay: 5000,
             reconnectionDelayMax: 10000,
+            query: {
+                client: "ice-slide",
+                version: "1.0.0",
+            }
         });
         newSocket.connect();
         set({ socket: newSocket });

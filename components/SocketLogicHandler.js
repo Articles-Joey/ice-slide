@@ -10,9 +10,13 @@ import { useRouter, usePathname } from 'next/navigation';
 
 // import { format } from 'date-fns'
 
-import axios from "axios";
+// import axios from "axios";
 
 import { useSocketStore } from "@/hooks/useSocketStore";
+import { useStore } from '@/hooks/useStore';
+
+const game_key = 'ice-slide'
+const game_name = 'Ice Slide'
 
 // SocketContextControl
 export default function SocketLogicHandler(props) {
@@ -29,6 +33,8 @@ export default function SocketLogicHandler(props) {
 
     const connected = useSocketStore((state) => state.connected)
     const setConnected = useSocketStore((state) => state.setConnected)
+
+    const setLobbyDetails = useStore(state => state.setLobbyDetails)
 
     // const {
     //     socket,
@@ -84,7 +90,7 @@ export default function SocketLogicHandler(props) {
         // Makes sure connect is only called once during reactStrictMode
         if (!initialized.current) {
             initialized.current = true
-            // connectSocket()
+            connectSocket()
         }
 
         // if (!socket.connected) return
@@ -136,6 +142,14 @@ export default function SocketLogicHandler(props) {
         console.log(`[📶 Socket] Page change emit`)
         socket.emit('activePage', pathname);
 
+        socket.on(`game:${game_key}-landing-details`, function (msg) {
+            console.log(`game:${game_key}-landing-details`, msg)
+
+            if (JSON.stringify(msg) !== JSON.stringify(lobbyDetails)) {
+                setLobbyDetails(msg)
+            }
+        });
+
         // router.events.on('routeChangeStart', handleRouteChange)
 
         return () => {
@@ -144,6 +158,7 @@ export default function SocketLogicHandler(props) {
             socket.off('force-page');
             socket.off('roomsList');
             socket.off('userCount', userCount);
+            socket.off(`game:${game_key}-landing-details`);
             // router.events.off('routeChangeStart', handleRouteChange)
         };
 
@@ -221,23 +236,23 @@ export default function SocketLogicHandler(props) {
 
             // return
 
-            axios.get('/api/user/sockets/login', {
-                params: {
-                    socket: socket.id
-                }
-            })
-                .then((response) => {
-                    console.log("[📶Socket] socket-login Success")
-                    console.log(response.data)
-                    // setSocketData(prevState => ({
-                    //     ...prevState,
-                    //     authenticated: true
-                    // }))
-                })
-                .catch(function (error) {
-                    console.log("[📶Socket] socket-login Error")
-                    console.log(error);
-                });
+            // axios.get('/api/user/sockets/login', {
+            //     params: {
+            //         socket: socket.id
+            //     }
+            // })
+            //     .then((response) => {
+            //         console.log("[📶Socket] socket-login Success")
+            //         console.log(response.data)
+            //         // setSocketData(prevState => ({
+            //         //     ...prevState,
+            //         //     authenticated: true
+            //         // }))
+            //     })
+            //     .catch(function (error) {
+            //         console.log("[📶Socket] socket-login Error")
+            //         console.log(error);
+            //     });
 
             // socket.emit('login', { userId: userReduxState?._id, session: session })
             // setSocketLoggedIn(true);

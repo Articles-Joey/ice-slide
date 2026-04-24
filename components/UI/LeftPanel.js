@@ -10,80 +10,36 @@ import { useSocketStore } from "@/hooks/useSocketStore";
 import { useIceSlideStore } from "@/hooks/useIceSlideStore";
 import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
+import { useStore } from "@/hooks/useStore";
+import { useSearchParams } from "next/navigation";
 
 export default function LeftPanelContent(props) {
 
-    const {
-        server,
-        // players,
-        touchControlsEnabled,
-        setTouchControlsEnabled,
-        reloadScene,
-        controllerState,
-        isFullscreen,
-        requestFullscreen,
-        exitFullscreen,
-        setShowMenu
-    } = props;
+    const searchParams = useSearchParams()
+    const params = Object.fromEntries(searchParams.entries());
+    const { server } = params
 
-    const theme = useIceSlideStore(state => state.theme);
-    const toggleTheme = useIceSlideStore(state => state.toggleTheme);
-    const hitRotation = useIceSlideStore(state => state.hitRotation);
-    const setHitRotation = useIceSlideStore(state => state.setHitRotation);
-    const hitPower = useIceSlideStore(state => state.hitPower);
-    const setHitPower = useIceSlideStore(state => state.setHitPower);
+    const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
+
+    // const theme = useIceSlideStore(state => state.theme);
+    // const toggleTheme = useIceSlideStore(state => state.toggleTheme);
+    // const hitRotation = useIceSlideStore(state => state.hitRotation);
+    // const setHitRotation = useIceSlideStore(state => state.setHitRotation);
+    // const hitPower = useIceSlideStore(state => state.hitPower);
+    // const setHitPower = useIceSlideStore(state => state.setHitPower);
+
+    const debug = useStore(state => state.debug);
+    const sidebar = useStore(state => state.sidebar);
+    const toggleSidebar = useStore(state => state.toggleSidebar);
+    const toggleDarkMode = useStore(state => state.toggleDarkMode);
+    const setShowSettingsModal = useStore(state => state.setShowSettingsModal);
 
     const {
         socket,
     } = useSocketStore(state => ({
         socket: state.socket,
     }));
-
-    const hitRotationRef = useRef(hitRotation);
-    useEffect(() => {
-        hitRotationRef.current = hitRotation;
-    }, [hitRotation]);
-
-    useHotkeys(['Right'], () => {
-        console.log("test", hitRotationRef.current)
-        if (hitRotationRef.current >= 360) {
-            setHitRotation(0)
-            return
-        }
-        setHitRotation(hitRotationRef.current + 1)
-    });
-    useHotkeys(['Left'], () => {
-        console.log("test", hitRotationRef.current)
-        if (hitRotationRef.current <= 0) {
-            setHitRotation(360)
-            return
-        }
-        setHitRotation(hitRotationRef.current - 1)
-    });
-
-    const hitPowerRef = useRef(hitPower);
-    useEffect(() => {
-        hitPowerRef.current = hitPower;
-    }, [hitPower]);
-
-    useHotkeys(['Up'], () => {
-        // console.log("test", hitPowerRef.current)
-        if (hitPowerRef.current >= 100) {
-            return
-        }
-        setHitPower(hitPowerRef.current + 1)
-    });
-    useHotkeys(['Down'], () => {
-        // console.log("test", hitPowerRef.current)
-        if (hitPowerRef.current <= 0) {
-            return
-        }
-        setHitPower(hitPowerRef.current - 1)
-    });
-
-    useHotkeys(['Enter'], () => {
-        console.log("Launch?")
-    });
 
     return (
         <div className='w-100'>
@@ -121,46 +77,74 @@ export default function LeftPanelContent(props) {
                         </div>
                     }
 
-                    <Link
-                        href={'/'}
-                        className=""
-                    >
-                        <ArticlesButton
-                            className='w-50'
-                            small
+                    <div className="d-flex flex-wrap">
+
+                        <Link
+                            href={'/'}
+                            className="w-50"
                         >
-                            <i className="fad fa-arrow-alt-square-left"></i>
-                            <span>Leave Game</span>
+                            <ArticlesButton
+                                className='w-100'
+                                small
+                            >
+                                <i className="fad fa-arrow-alt-square-left"></i>
+                                <span>Leave Game</span>
+                            </ArticlesButton>
+                        </Link>
+
+                        <ArticlesButton
+                            small
+                            className="w-50"
+                            active={isFullscreen}
+                            onClick={() => {
+                                if (isFullscreen) {
+                                    exitFullscreen()
+                                } else {
+                                    requestFullscreen()
+                                }
+                            }}
+                        >
+                            {isFullscreen && <span>Exit </span>}
+                            {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
+                            <span>Fullscreen</span>
                         </ArticlesButton>
-                    </Link>
 
-                    <ArticlesButton
-                        small
-                        className="w-50"
-                        active={isFullscreen}
-                        onClick={() => {
-                            if (isFullscreen) {
-                                exitFullscreen()
-                            } else {
-                                requestFullscreen('ice-slide-game-page')
-                            }
-                        }}
-                    >
-                        {isFullscreen && <span>Exit </span>}
-                        {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
-                        <span>Fullscreen</span>
-                    </ArticlesButton>
+                        <div className="d-flex w-50">
+                            <ArticlesButton
+                                className={`w-100`}
+                                small
+                                onClick={() => {
+                                    setShowSettingsModal(true)
+                                }}
+                            >
+                                <i className="fad fa-cog"></i>
+                                Settings
+                            </ArticlesButton>
+                            <ArticlesButton
+                                className={``}
+                                small
+                                onClick={() => {
+                                    toggleDarkMode()
+                                }}
+                            >
+                                <i className="fad fa-moon"></i>
+                                {/* Dark Mode */}
+                            </ArticlesButton>
+                        </div>
 
-                    <ArticlesButton
-                        small
-                        className="w-50"
-                        onClick={() => {
-                            toggleTheme()
-                        }}
-                    >
-                        <i className="fad fa-eye-dropper me-2"></i>
-                        {`Theme: ${theme === 'Dark' ? 'Dark' : 'Light'}`}
-                    </ArticlesButton>
+                        <ArticlesButton
+                            small
+                            className='w-50'
+                            active={sidebar}
+                            onClick={() => {
+                                toggleSidebar()
+                            }}
+                        >
+                            <i className="fad fa-cog"></i>
+                            <span>Sidebar</span>
+                        </ArticlesButton>
+
+                    </div>
 
                 </div>
             </div>
@@ -198,7 +182,7 @@ export default function LeftPanelContent(props) {
             </div> */}
 
             {/* Touch Controls */}
-            <div
+            {/* <div
                 className="card card-articles card-sm"
             >
                 <div className="card-body">
@@ -236,49 +220,14 @@ export default function LeftPanelContent(props) {
                     </div>
 
                 </div>
-            </div>
+            </div> */}
 
             {/* Debug Controls */}
-            <div
-                className="card card-articles card-sm"
-            >
-                <div className="card-body">
+            {debug &&
+                <DebugPanel />
+            }
 
-                    <div className="small text-muted">Debug Controls</div>
-
-                    <div className="small border p-2">
-                        <div>Rotation Angle: {hitRotation}</div>
-                        <div>Power: {hitPower}/100</div>
-                    </div>
-
-                    <div className='d-flex flex-column'>
-
-                        <div>
-                            <ArticlesButton
-                                size="sm"
-                                className="w-50"
-                                onClick={reloadScene}
-                            >
-                                <i className="fad fa-redo"></i>
-                                Reload Game
-                            </ArticlesButton>
-
-                            <ArticlesButton
-                                size="sm"
-                                className="w-50"
-                                onClick={reloadScene}
-                            >
-                                <i className="fad fa-redo"></i>
-                                Reset Camera
-                            </ArticlesButton>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-
-            {controllerState?.connected &&
+            {/* {controllerState?.connected &&
                 <div className="panel-content-group p-0 text-dark">
 
                     <div className="p-1 border-bottom border-dark">
@@ -300,20 +249,63 @@ export default function LeftPanelContent(props) {
                         </ArticlesButton>
                     </div>
 
-                    {/* {showControllerState && <div className='p-3'>
+                </div>
+            } */}
 
-                        <ControllerPreview
-                            controllerState={controllerState}
-                            showJSON={true}
-                            showVibrationControls={true}
-                            maxHeight={300}
-                            showPreview={true}
-                        />
-                    </div>} */}
+        </div>
+    )
+
+}
+
+function DebugPanel() {
+
+    const hitRotation = useIceSlideStore(state => state.hitRotation);
+    const hitPower = useIceSlideStore(state => state.hitPower);
+
+    const incSceneKey = useStore(state => state.incSceneKey);
+
+    return (
+        <div
+            className="card card-articles card-sm"
+        >
+            <div className="card-body">
+
+                <div className="small">Debug Controls</div>
+
+                <div className="small border p-2">
+                    <div>Rotation Angle: {hitRotation}</div>
+                    <div>Power: {hitPower}/100</div>
+                </div>
+
+                <div className='d-flex flex-column'>
+
+                    <div>
+                        <ArticlesButton
+                            size="sm"
+                            className="w-50"
+                            onClick={() => {
+                                incSceneKey()
+                            }}
+                        >
+                            <i className="fad fa-redo"></i>
+                            Reload Game
+                        </ArticlesButton>
+
+                        <ArticlesButton
+                            size="sm"
+                            className="w-50"
+                            onClick={() => {
+                                incSceneKey()
+                            }}
+                        >
+                            <i className="fad fa-redo"></i>
+                            Reset Camera
+                        </ArticlesButton>
+                    </div>
 
                 </div>
-            }
 
+            </div>
         </div>
     )
 
