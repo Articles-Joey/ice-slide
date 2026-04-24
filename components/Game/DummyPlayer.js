@@ -1,11 +1,15 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useCylinder } from "@react-three/cannon";
 import { ModelWheel } from "../Models/Wheel";
+import { useIceSlideStore } from "@/hooks/useIceSlideStore";
 
-function DummyPlayer({ position }) {
+function DummyPlayer({ position, hitPower, hitRotation }) {
+
+    const launchPlayers = useIceSlideStore(state => state.launchPlayers)
 
     const puckRef = useRef()
+    const launched = useRef(false)
 
     const [ref, api] = useCylinder(() => ({
         mass: 10,
@@ -17,6 +21,27 @@ function DummyPlayer({ position }) {
         linearFactor: [1, 0, 1],   // prevent Y-axis launch on collision
         angularFactor: [0, 1, 0],  // prevent tumbling, only allow Y-axis spin
     }))
+
+    useEffect(() => {
+
+        console.log("Player detected launchPlayers change")
+
+        if (launchPlayers && !launched.current) {
+
+            console.log("Launching player with hitPower:", hitPower, "and hitRotation:", hitRotation)
+
+            launched.current = true;
+            const angle = (hitRotation * Math.PI) / 180;
+            const vx = Math.sin(angle) * hitPower;
+            const vz = Math.cos(angle) * hitPower;
+            api.velocity.set(vx, 0, vz);
+        }
+
+        if (!launchPlayers) {
+            launched.current = false;
+        }
+
+    }, [launchPlayers])
 
     useFrame(() => {
 

@@ -14,6 +14,7 @@ import { useRouter, usePathname } from 'next/navigation';
 
 import { useSocketStore } from "@/hooks/useSocketStore";
 import { useStore } from '@/hooks/useStore';
+import { useIceSlideStore } from '@/hooks/useIceSlideStore';
 
 const game_key = 'ice-slide'
 const game_name = 'Ice Slide'
@@ -159,8 +160,22 @@ export default function SocketLogicHandler(props) {
             }
         });
 
-        socket.on(`game:${game_key}:game-update`, function (msg) {
-            console.log(`game:${game_key}:game-update`, msg)
+        socket.on(`launch`, function (msg) {
+            
+            console.log(`launch event sent from server`, msg)
+            const setLaunchPlayers = useIceSlideStore.getState().setLaunchPlayers
+            setLaunchPlayers(true)
+
+            setTimeout(() => {
+                setLaunchPlayers(false)
+            }, 1000);
+
+        });
+
+        socket.on(`game-update`, function (msg) {
+            console.log(`game-update`, msg)
+            const setPlayers = useIceSlideStore.getState().setPlayers
+            setPlayers(msg.players)
         });
 
         // router.events.on('routeChangeStart', handleRouteChange)
@@ -170,6 +185,7 @@ export default function SocketLogicHandler(props) {
             socket.off('disconnect');
             socket.off('force-page');
             socket.off('roomsList');
+            socket.off('launch');
             socket.off('userCount', userCount);
             socket.off(`game:${game_key}-landing-details`);
             socket.off(`game:${game_key}:game-update`);

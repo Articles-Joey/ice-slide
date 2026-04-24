@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 
 import { useIceSlideStore } from '@/hooks/useIceSlideStore';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { useSocketStore } from '@/hooks/useSocketStore';
 
 export default function ControlsHandler() {
 
@@ -56,8 +57,18 @@ export default function ControlsHandler() {
     });
 
     useHotkeys(['Enter', 'space'], () => {
+
         console.log("Launch?")
+
+        const socket = useSocketStore.getState().socket
+
+        socket.emit('game:ice-slide:move', {
+            hitRotation: hitRotationRef.current,
+            hitPower: hitPowerRef.current
+        });
+
         setLaunchPlayer(true)
+
     });
 
     return (

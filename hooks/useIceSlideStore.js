@@ -8,7 +8,20 @@ import { persist } from 'zustand/middleware'
 // const setLocalStorage = (key, value) => window.localStorage.setItem(key, JSON.stringify(value))
 
 // export const useIceSlideStore = create((set) => ({
-export const useIceSlideStore = create(persist((set) => ({
+export const useIceSlideStore = create((set) => ({
+
+    players: [],
+    setPlayers: (newValue) => {
+        set((prev) => ({
+            players: newValue
+        }))
+    },
+    launchPlayers: false,
+    setLaunchPlayers: (newValue) => {
+        set((prev) => ({
+            launchPlayers: newValue
+        }))
+    },
 
     launchPlayer: false,
     setLaunchPlayer: (newValue) => {
@@ -47,9 +60,4 @@ export const useIceSlideStore = create(persist((set) => ({
         }))
     },
 
-}), {
-    name: 'ice-slide-game',
-    // partialize: (state) => ({
-    //     debug: state.debug,
-    // })
 }))

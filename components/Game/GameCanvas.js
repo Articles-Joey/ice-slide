@@ -24,6 +24,7 @@ import { ModelBear } from "../Models/Bear";
 import Penguins from "./Penguins";
 import { ModelWalrus } from "../Models/Walrus";
 import { ModelSnowman } from "../Models/Snowman";
+import SocketPlayers from "./SocketPlayers";
 
 function GameCanvas(props) {
 
@@ -110,6 +111,7 @@ function GameCanvas(props) {
                 <Debug color="black" scale={debug ? 1 : 0}>
 
                     <PlayerProjectile />
+                    <SocketPlayers />
 
                     <Barrel
                         position={[20, 1, -10]}
@@ -121,7 +123,7 @@ function GameCanvas(props) {
                         args={[2, 2, 6, 10]}
                     />
 
-                    <DummyPlayer
+                    {/* <DummyPlayer
                         position={[40, 1.5, -40]}
                     />
 
@@ -131,7 +133,7 @@ function GameCanvas(props) {
 
                     <DummyPlayer
                         position={[-40, 1.5, 40]}
-                    />
+                    /> */}
 
                     <Ground />
 

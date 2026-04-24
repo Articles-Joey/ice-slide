@@ -14,7 +14,7 @@ function PlayerProjectile() {
         mass: 10,
         // type: 'Dynamic',
         args: [3, 3, 1, 32],
-        position: [-40, 1.5, -40],
+        position: [0, 1.5, 0],
         linearDamping: 0.2,
         angularDamping: 0.3,
         linearFactor: [1, 0, 1],   // prevent Y-axis launch on collision

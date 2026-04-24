@@ -13,6 +13,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 import { useStore } from "@/hooks/useStore";
 import { useSearchParams } from "next/navigation";
+import GameDetailsPanel from "./GameDetailsPanel";
 
 export default function LeftPanelContent(props) {
 
@@ -221,6 +222,8 @@ export default function LeftPanelContent(props) {
 
                 </div>
             </div> */}
+
+            <GameDetailsPanel />
 
             {/* Debug Controls */}
             {debug &&

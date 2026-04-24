@@ -54,19 +54,20 @@ export default function IceSlideGamePage() {
     useEffect(() => {
 
         if (server && socket.connected) {
-            socket.emit('join-room', `game:${game_key}-room-${server}`, {
+            const roomName = `game:${game_key}-room-${server}`;
+            socket.emit('join-room', roomName, {
                 game_id: server,
                 nickname: nickname,
                 client_version: '1',
 
             });
+
+            return function cleanup() {
+                socket.emit('leave-room', roomName)
+            };
         }
 
-        // return function cleanup() {
-        //     socket.emit('leave-room', 'game:glass-ceiling-landing')
-        // };
-
-    }, [server, socket.connected]);
+    }, [server, socket.connected, nickname]);
 
     // const [showMenu, setShowMenu] = useState(false)
 
@@ -157,10 +158,10 @@ export default function IceSlideGamePage() {
 
                 <GameCanvas
                     key={sceneKey}
-                    // gameState={gameState}
-                    // playerData={playerData}
-                    // setPlayerData={setPlayerData}
-                    // players={players}
+                // gameState={gameState}
+                // playerData={playerData}
+                // setPlayerData={setPlayerData}
+                // players={players}
                 />
 
             </div>

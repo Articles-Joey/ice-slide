@@ -46,8 +46,10 @@ export default function IceSlideLobbyPage() {
 
     const {
         socket,
+        connected
     } = useSocketStore(state => ({
         socket: state.socket,
+        connected: state.connected
     }));
 
     const {
@@ -264,6 +266,7 @@ export default function IceSlideLobbyPage() {
                                                 <ArticlesButton
                                                     className="px-5"
                                                     small
+                                                    disabled={!connected}
                                                 >
                                                     Join
                                                 </ArticlesButton>
