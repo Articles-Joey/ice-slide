@@ -21,6 +21,9 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
 });
 
+const game_key = 'ice-slide'
+const game_name = 'Ice Slide'
+
 export default function IceSlideGamePage() {
 
     const {
@@ -38,6 +41,8 @@ export default function IceSlideGamePage() {
     // const { controllerState, setControllerState } = useControllerStore()
     // const [showControllerState, setShowControllerState] = useState(false)
 
+    const nickname = useStore(state => state.nickname)
+
     const sceneKey = useStore(state => state.sceneKey)
     const showMenu = useStore(state => state.showMenu)
     const setShowMenu = useStore(state => state.setShowMenu)
@@ -49,9 +54,9 @@ export default function IceSlideGamePage() {
     useEffect(() => {
 
         if (server && socket.connected) {
-            socket.emit('join-room', `game:cannon-room-${server}`, {
+            socket.emit('join-room', `game:${game_key}-room-${server}`, {
                 game_id: server,
-                nickname: JSON.parse(localStorage.getItem('game:nickname')),
+                nickname: nickname,
                 client_version: '1',
 
             });

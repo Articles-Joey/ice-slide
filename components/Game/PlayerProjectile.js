@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useSphere } from "@react-three/cannon";
+import { useCylinder } from "@react-three/cannon";
 import { degToRad } from "three/src/math/MathUtils";
 import { MathUtils } from "three";
 import { useIceSlideStore } from "@/hooks/useIceSlideStore";
@@ -10,11 +10,15 @@ function PlayerProjectile() {
 
     const puckRef = useRef()
 
-    const [ref, api] = useSphere(() => ({
+    const [ref, api] = useCylinder(() => ({
         mass: 10,
         // type: 'Dynamic',
-        args: [1, 1, 1],
-        position: [-40, 5, -40],
+        args: [3, 3, 1, 32],
+        position: [-40, 1.5, -40],
+        linearDamping: 0.2,
+        angularDamping: 0.3,
+        linearFactor: [1, 0, 1],   // prevent Y-axis launch on collision
+        angularFactor: [0, 1, 0],  // prevent tumbling, only allow Y-axis spin
     }))
 
     const hitRotation = useIceSlideStore(state => state.hitRotation);
@@ -51,8 +55,8 @@ function PlayerProjectile() {
         const radians = MathUtils.degToRad(hitRotation);
 
         // Calculate impulse direction based on rotation
-        const impulseX = Math.sin(radians) * hitPower; // Z-axis points forward in Three.js, so sin affects X
-        const impulseZ = Math.cos(radians) * hitPower; // Cos affects Z
+        const impulseX = Math.sin(radians) * (hitPower * 10); // Z-axis points forward in Three.js, so sin affects X
+        const impulseZ = Math.cos(radians) * (hitPower * 10); // Cos affects Z
 
         // Apply impulse to the ball in the calculated direction
         api.applyImpulse([impulseX, 0, impulseZ], [0, 0, 0]); // Apply impulse at the center of the object
@@ -134,7 +138,7 @@ function PlayerProjectile() {
 
             <mesh ref={ref} castShadow>
 
-                <sphereGeometry args={[1, 10, 10]} />
+                <cylinderGeometry args={[3, 3, 1, 32]} />
                 <meshStandardMaterial color="red" />
 
             </mesh>

@@ -34,6 +34,7 @@ export default function SocketLogicHandler(props) {
     const connected = useSocketStore((state) => state.connected)
     const setConnected = useSocketStore((state) => state.setConnected)
 
+    const lobbyDetails = useStore(state => state.lobbyDetails)
     const setLobbyDetails = useStore(state => state.setLobbyDetails)
 
     // const {
@@ -150,6 +151,18 @@ export default function SocketLogicHandler(props) {
             }
         });
 
+        socket.on(`game:${game_key}-landing-details`, function (msg) {
+            console.log(`game:${game_key}-landing-details`, msg)
+
+            if (JSON.stringify(msg) !== JSON.stringify(lobbyDetails)) {
+                setLobbyDetails(msg)
+            }
+        });
+
+        socket.on(`game:${game_key}:game-update`, function (msg) {
+            console.log(`game:${game_key}:game-update`, msg)
+        });
+
         // router.events.on('routeChangeStart', handleRouteChange)
 
         return () => {
@@ -159,6 +172,7 @@ export default function SocketLogicHandler(props) {
             socket.off('roomsList');
             socket.off('userCount', userCount);
             socket.off(`game:${game_key}-landing-details`);
+            socket.off(`game:${game_key}:game-update`);
             // router.events.off('routeChangeStart', handleRouteChange)
         };
 

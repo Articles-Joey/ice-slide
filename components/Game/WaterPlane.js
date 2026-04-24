@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { useRef, useMemo } from 'react'
 import { extend, useThree, useLoader, useFrame } from '@react-three/fiber'
 import { Water } from 'three-stdlib'
+import { useStore } from '@/hooks/useStore'
 
 extend({ Water })
 
@@ -13,8 +14,15 @@ export default function WaterPlane(props) {
 
     const waterNormals = useLoader(THREE.TextureLoader, link)
 
+    const graphicsQuality = useStore(state => state.graphicsQuality)
+
     waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping
-    const geom = useMemo(() => new THREE.PlaneGeometry(250, 250), [])
+    const geom = useMemo(() => {
+        let size = 1000
+        if (graphicsQuality === 'Low') size = 250
+        if (graphicsQuality === 'Medium') size = 500
+        return new THREE.PlaneGeometry(size, size)
+    }, [graphicsQuality])
     const config = useMemo(
         () => ({
             textureWidth: 512,

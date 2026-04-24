@@ -18,7 +18,7 @@ export default function ControlsHandler() {
         hitRotationRef.current = hitRotation;
     }, [hitRotation]);
 
-    useHotkeys(['Right'], () => {
+    useHotkeys(['Right', 'd'], () => {
         console.log("test", hitRotationRef.current)
         if (hitRotationRef.current >= 360) {
             setHitRotation(0)
@@ -26,7 +26,7 @@ export default function ControlsHandler() {
         }
         setHitRotation(hitRotationRef.current + 1)
     });
-    useHotkeys(['Left'], () => {
+    useHotkeys(['Left', 'a'], () => {
         console.log("test", hitRotationRef.current)
         if (hitRotationRef.current <= 0) {
             setHitRotation(360)
@@ -40,14 +40,14 @@ export default function ControlsHandler() {
         hitPowerRef.current = hitPower;
     }, [hitPower]);
 
-    useHotkeys(['Up'], () => {
+    useHotkeys(['Up', 'w'], () => {
         // console.log("test", hitPowerRef.current)
         if (hitPowerRef.current >= 100) {
             return
         }
         setHitPower(hitPowerRef.current + 1)
     });
-    useHotkeys(['Down'], () => {
+    useHotkeys(['Down', 's'], () => {
         // console.log("test", hitPowerRef.current)
         if (hitPowerRef.current <= 0) {
             return
@@ -55,7 +55,7 @@ export default function ControlsHandler() {
         setHitPower(hitPowerRef.current - 1)
     });
 
-    useHotkeys(['Enter'], () => {
+    useHotkeys(['Enter', 'space'], () => {
         console.log("Launch?")
         setLaunchPlayer(true)
     });

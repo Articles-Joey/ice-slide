@@ -7,15 +7,19 @@ Files: Iceberg.glb [58.81KB] > F:\My Documents\Sites games\ice-slide\public\mode
 import React, { useRef, useMemo } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import { useStore } from '@/hooks/useStore'
 
 
 export function ModelIceberg({ bobHeight = 2, ...props }) {
+
+  const graphicsQuality = useStore(state => state.graphicsQuality)
+
   const group = useRef()
   const { nodes, materials } = useGLTF('models/Iceberg-transformed.glb')
   // Random phase offset so each instance bobs out of sync
   const phase = useMemo(() => Math.random() * Math.PI * 2, [])
   useFrame((state) => {
-    if (group.current) {
+    if (group.current && graphicsQuality !== 'Low') {
       group.current.position.y = Math.sin(state.clock.getElapsedTime() * 1.2 + phase) * bobHeight
     }
   })

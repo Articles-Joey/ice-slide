@@ -1,15 +1,15 @@
 import { memo } from "react";
 
 import { Canvas } from "@react-three/fiber"
-import { Sky, OrbitControls, Stats } from "@react-three/drei";
+import { Sky, OrbitControls, Stats, Image } from "@react-three/drei";
 
-import { Physics } from "@react-three/cannon";
+import { Debug, Physics } from "@react-three/cannon";
 import { degToRad } from "three/src/math/MathUtils";
 import WaterPlane from "./WaterPlane";
 import { ModelGoogleIglooOpen } from "@/components/Models/Igloo Open";
 import { ModelKennyNLMiniGolfFlagRed } from "@/components/Models/flag-red";
 import Icebergs from "./Icebergs";
-import GrassPlane from "./GrassPlane";
+// import GrassPlane from "./GrassPlane";
 import FlatRing from "./FlatRing";
 import Ground from "./Ground";
 import Rocks from "./Rocks";
@@ -18,34 +18,21 @@ import PlayerProjectile from "./PlayerProjectile";
 import DummyPlayer from "./DummyPlayer";
 import Barrel from "./Barrel";
 import Star from "./Star";
+import LogoCube from "./LogoCube";
+import { useStore } from "@/hooks/useStore";
+import { ModelBear } from "../Models/Bear";
+import Penguins from "./Penguins";
+import { ModelWalrus } from "../Models/Walrus";
+import { ModelSnowman } from "../Models/Snowman";
 
 function GameCanvas(props) {
 
-    // const GPUTier = useDetectGPU()
-
-    // const {
-    //     playerRotation,
-    //     setPlayerRotation
-    // } = useCannonStore(state => ({
-    //     playerRotation: state.playerRotation,
-    //     setPlayerRotation: state.setPlayerRotation
-    // }));
-
-    const {
-        handleCameraChange,
-        gameState,
-        players,
-        move,
-        cameraInfo,
-        server
-    } = props;
-
-    // const [[a, b, c, d, e]] = useState(() => [...Array(5)].map(createRef))
+    const debug = useStore(state => state.debug);
 
     return (
         <Canvas camera={{ position: [-10, 40, 40], fov: 50 }}>
 
-            {process.env.NODE_ENV === 'development' && 
+            {process.env.NODE_ENV === 'development' &&
                 <>
                     <axesHelper args={[50]} />
                     <Stats />
@@ -69,6 +56,8 @@ function GameCanvas(props) {
 
             {/* <pointLight position={[-10, -10, -10]} /> */}
 
+            <LogoCube />
+
             <FlatRing
                 args={[3, 5, 32]}
                 color={"gold"}
@@ -88,7 +77,7 @@ function GameCanvas(props) {
             <Rocks />
 
             <ModelGoogleIglooOpen
-                position={[100, 30, 0]}
+                position={[100, 29.5, 0]}
                 scale={3}
                 rotation={[0, degToRad(-55), 0]}
             />
@@ -99,35 +88,56 @@ function GameCanvas(props) {
                 rotation={[0, degToRad(-90), 0]}
             />
 
+            <ModelBear
+                position={[100, 31.25, 8]}
+                scale={0.025}
+                rotation={[0, degToRad(-90), 0]}
+            />
+
+            <Penguins />
+
+            <ModelWalrus
+                position={[0, 31.25, 100]}
+                scale={0.01}
+            />
+
+            <ModelSnowman
+                position={[0, 31.25, -100]}
+            />
+
             <Physics>
 
-                <PlayerProjectile />
+                <Debug color="black" scale={debug ? 1 : 0}>
 
-                <Barrel
-                    position={[20, 1, -10]}
-                    args={[2, 2, 6, 10]}
-                />
+                    <PlayerProjectile />
 
-                <Star
-                    position={[-20, 1, 10]}
-                    args={[2, 2, 6, 10]}
-                />
+                    <Barrel
+                        position={[20, 1, -10]}
+                        args={[2, 2, 6, 10]}
+                    />
 
-                <DummyPlayer
-                    position={[40, 5, -40]}
-                />
+                    <Star
+                        position={[-20, 1, 10]}
+                        args={[2, 2, 6, 10]}
+                    />
 
-                <DummyPlayer
-                    position={[40, 5, 40]}
-                />
+                    <DummyPlayer
+                        position={[40, 1.5, -40]}
+                    />
 
-                <DummyPlayer
-                    position={[-40, 5, 40]}
-                />
+                    <DummyPlayer
+                        position={[40, 1.5, 40]}
+                    />
 
-                <Ground />
+                    <DummyPlayer
+                        position={[-40, 1.5, 40]}
+                    />
 
-                <Walls />
+                    <Ground />
+
+                    <Walls />
+
+                </Debug>
 
             </Physics>
 
