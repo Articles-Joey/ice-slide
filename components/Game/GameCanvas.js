@@ -25,39 +25,58 @@ import Penguins from "./Penguins";
 import { ModelWalrus } from "../Models/Walrus";
 import { ModelSnowman } from "../Models/Snowman";
 import SocketPlayers from "./SocketPlayers";
+import { ModelBoat } from "../Models/Boat";
+import ControlsHandler from "./ControlsHandler";
 
 function GameCanvas(props) {
 
     const debug = useStore(state => state.debug);
+    const darkMode = useStore(state => state.darkMode)
 
     return (
-        <Canvas camera={{ position: [-10, 40, 40], fov: 50 }}>
+        <Canvas camera={{ position: [-10, 100, 100], fov: 50 }}>
 
             {process.env.NODE_ENV === 'development' &&
                 <>
                     <axesHelper args={[50]} />
-                    <Stats />
+                    <Stats className="stats-overlay" />
                 </>
             }
+
+            {/* <fog attach="fog" args={['#ffffff', 100, 200]} /> */}
 
             <OrbitControls
             // autoRotate={gameState?.status == 'In Lobby'}
             />
 
-            <Sky
-                // distance={450000}
-                sunPosition={[0, 10, 0]}
-            // inclination={0}
-            // azimuth={0.25}
-            // {...props} 
-            />
+            {darkMode ?
+                <>
+                    <ambientLight intensity={0} />
+                    <spotLight intensity={10000} position={[0, 100, 0]} angle={5} penumbra={1} />
+                    
+                    <pointLight position={[-100, 30, -100]} color={"red"} intensity={10000} />
 
-            <ambientLight intensity={5} />
-            <spotLight intensity={30000} position={[-50, 100, 50]} angle={5} penumbra={1} />
+                    <Sky
+                        sunPosition={[0, -1, 0]}
+                    />
+                </>
+                :
+                <>
+                    <ambientLight intensity={2} />
+                    {/* <spotLight intensity={30000} position={[-50, 100, 50]} angle={5} penumbra={1} /> */}
+                    <Sky
+                        sunPosition={[0, 10, 0]}
+                    />
+                </>
+            }
+
+
 
             {/* <pointLight position={[-10, -10, -10]} /> */}
 
             <LogoCube />
+
+            <ControlsHandler />
 
             <FlatRing
                 args={[3, 5, 32]}
@@ -97,6 +116,12 @@ function GameCanvas(props) {
 
             <Penguins />
 
+            <ModelBoat
+                position={[-90, 2, -90]}
+                scale={0.06}
+                rotation={[0, degToRad(45), 0]}
+            />
+
             <ModelWalrus
                 position={[0, 31.25, 100]}
                 scale={0.01}
@@ -110,7 +135,9 @@ function GameCanvas(props) {
 
                 <Debug color="black" scale={debug ? 1 : 0}>
 
-                    <PlayerProjectile />
+                    {/* Offline controlled player */}
+                    {/* <PlayerProjectile /> */}
+
                     <SocketPlayers />
 
                     <Barrel

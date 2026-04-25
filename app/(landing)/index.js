@@ -218,7 +218,7 @@ export default function IceSlideLobbyPage() {
                                     // 4
                                 ].map(id => {
 
-                                    let lobbyLookup = lobbyDetails?.fourFrogsGlobalState?.games?.find(lobby =>
+                                    let lobbyLookup = lobbyDetails?.globalGameState?.games?.find(lobby =>
                                         parseInt(lobby.server_id) == id
                                     )
 

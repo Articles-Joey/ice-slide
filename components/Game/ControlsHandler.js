@@ -1,78 +1,57 @@
 "use client"
-import { useEffect, useRef } from 'react';
-
-import { useIceSlideStore } from '@/hooks/useIceSlideStore';
-import { useHotkeys } from 'react-hotkeys-hook';
-import { useSocketStore } from '@/hooks/useSocketStore';
+import { useEffect } from 'react';
+import { useGameControls } from '@/hooks/useGameControls';
+import { useSearchParams } from 'next/navigation';
 
 export default function ControlsHandler() {
 
-    const launchPlayer = useIceSlideStore(state => state.launchPlayer);
-    const setLaunchPlayer = useIceSlideStore(state => state.setLaunchPlayer);
-    const hitRotation = useIceSlideStore(state => state.hitRotation);
-    const setHitRotation = useIceSlideStore(state => state.setHitRotation);
-    const hitPower = useIceSlideStore(state => state.hitPower);
-    const setHitPower = useIceSlideStore(state => state.setHitPower);
+    const searchParams = useSearchParams()
+    const { server } = Object.fromEntries(searchParams.entries());
 
-    const hitRotationRef = useRef(hitRotation);
+    const actions = useGameControls({ server });
+
     useEffect(() => {
-        hitRotationRef.current = hitRotation;
-    }, [hitRotation]);
+        const heldKeys = new Set();
+        let rafId = null;
 
-    useHotkeys(['Right', 'd'], () => {
-        console.log("test", hitRotationRef.current)
-        if (hitRotationRef.current >= 360) {
-            setHitRotation(0)
-            return
-        }
-        setHitRotation(hitRotationRef.current + 1)
-    });
-    useHotkeys(['Left', 'a'], () => {
-        console.log("test", hitRotationRef.current)
-        if (hitRotationRef.current <= 0) {
-            setHitRotation(360)
-            return
-        }
-        setHitRotation(hitRotationRef.current - 1)
-    });
+        const keyActions = {
+            arrowright: actions.rotateRight,
+            d:          actions.rotateRight,
+            arrowleft:  actions.rotateLeft,
+            a:          actions.rotateLeft,
+            arrowup:    actions.powerUp,
+            w:          actions.powerUp,
+            arrowdown:  actions.powerDown,
+            s:          actions.powerDown,
+        };
 
-    const hitPowerRef = useRef(hitPower);
-    useEffect(() => {
-        hitPowerRef.current = hitPower;
-    }, [hitPower]);
+        const loop = () => {
+            if (heldKeys.size === 0) { rafId = null; return; }
+            heldKeys.forEach(key => keyActions[key]?.());
+            rafId = requestAnimationFrame(loop);
+        };
 
-    useHotkeys(['Up', 'w'], () => {
-        // console.log("test", hitPowerRef.current)
-        if (hitPowerRef.current >= 100) {
-            return
-        }
-        setHitPower(hitPowerRef.current + 1)
-    });
-    useHotkeys(['Down', 's'], () => {
-        // console.log("test", hitPowerRef.current)
-        if (hitPowerRef.current <= 0) {
-            return
-        }
-        setHitPower(hitPowerRef.current - 1)
-    });
+        const onKeyDown = (e) => {
+            const key = e.key.toLowerCase();
+            if (key === 'enter' || key === ' ') { actions.launch(); return; }
+            if (key in keyActions) {
+                e.preventDefault();
+                heldKeys.add(key);
+                if (!rafId) rafId = requestAnimationFrame(loop);
+            }
+        };
 
-    useHotkeys(['Enter', 'space'], () => {
+        const onKeyUp = (e) => { heldKeys.delete(e.key.toLowerCase()); };
 
-        console.log("Launch?")
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
 
-        const socket = useSocketStore.getState().socket
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('keyup', onKeyUp);
+            if (rafId) cancelAnimationFrame(rafId);
+        };
+    }, [actions]);
 
-        socket.emit('game:ice-slide:move', {
-            hitRotation: hitRotationRef.current,
-            hitPower: hitPowerRef.current
-        });
-
-        setLaunchPlayer(true)
-
-    });
-
-    return (
-        <></>
-    )
-
+    return <></>;
 }

@@ -1,8 +1,9 @@
 // import { useState, useEffect, useCallback } from 'react';
 
+import { forwardRef } from 'react';
 import classNames from "classnames";
 
-export default function ArticlesButton(props) {
+const ArticlesButton = forwardRef(function ArticlesButton(props, ref) {
 
     const {
         size,
@@ -16,25 +17,18 @@ export default function ArticlesButton(props) {
         disabled,
         active,
         type,
-        onMouseDown,
-        onMouseUp,
-        onMouseLeave,
-        onTouchStart,
-        onTouchEnd
+        ...rest
     } = props;
 
     return (
         <button
+            ref={ref}
+            {...rest}
             {
                 ...(type && {type: 'submit'})
             }
             disabled={disabled}
             style={style}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            onMouseLeave={onMouseLeave}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
             // data-react-component='true'
             className={
                 classNames(
@@ -53,4 +47,6 @@ export default function ArticlesButton(props) {
             {props.children}
         </button>
     )
-}
+})
+
+export default ArticlesButton

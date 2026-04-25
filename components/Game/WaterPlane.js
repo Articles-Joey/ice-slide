@@ -9,12 +9,14 @@ extend({ Water })
 const link = `${process.env.NEXT_PUBLIC_CDN}games/Race Game/waternormals.jpeg`
 
 export default function WaterPlane(props) {
+
     const ref = useRef()
     const gl = useThree((state) => state.gl)
 
     const waterNormals = useLoader(THREE.TextureLoader, link)
 
     const graphicsQuality = useStore(state => state.graphicsQuality)
+    const darkMode = useStore(state => state.darkMode)
 
     waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping
     const geom = useMemo(() => {
@@ -29,13 +31,13 @@ export default function WaterPlane(props) {
             textureHeight: 512,
             waterNormals,
             sunDirection: [1000, 10, 0],
-            sunColor: 0xffffff,
-            waterColor: 0x001e0f,
+            sunColor: darkMode ? 0x222222 : 0xffffff,
+            waterColor: darkMode ? 0x011111 : 0x00aaff,
             distortionScale: 3.7,
             fog: false,
             format: gl.encoding
         }),
-        [waterNormals]
+        [waterNormals, darkMode]
     )
     useFrame((state, delta) => (ref.current.material.uniforms.time.value += delta))
     return <water ref={ref} args={[geom, config]} {...props} rotation-x={-Math.PI / 2} />

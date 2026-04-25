@@ -22,7 +22,10 @@ export default function GameDetailsPanel() {
 
                         <div>X: {player?.x || 0} | Z: {player?.z || 0}</div>
 
-                        {player.ready &&
+                        {
+                        // player.ready 
+                        true
+                        &&
                             <div className="">
                                 <div>{player.hitPower}</div>
                                 <div>{player.hitRotation}</div>

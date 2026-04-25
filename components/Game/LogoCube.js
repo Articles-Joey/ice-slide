@@ -5,6 +5,7 @@ import { degToRad } from "three/src/math/MathUtils.js";
 export default function LogoCube() {
 
     const graphicsQuality = useStore(state => state.graphicsQuality)
+    const darkMode = useStore(state => state.darkMode)
 
     const distance = 300
     const height = 60
@@ -28,6 +29,7 @@ export default function LogoCube() {
                     scale={100}
                     rotation={side.rotation}
                     position={side.position}
+                    color={darkMode ? "#777777" : "#ffffff"}
                 />
             ))}
         </group>

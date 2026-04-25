@@ -16,6 +16,7 @@ import { useSocketStore } from '@/hooks/useSocketStore';
 // import { useHotkeys } from 'react-hotkeys-hook';
 import ControlsHandler from '@/components/Game/ControlsHandler';
 import { useStore } from '@/hooks/useStore';
+import TouchControls from '@/components/UI/TouchControls';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -107,33 +108,33 @@ export default function IceSlideGamePage() {
             id="ice-slide-game-page"
         >
 
-            <ControlsHandler />
-
             <div className="menu-bar card card-articles p-1 justify-content-center">
 
-                <div className='flex-header align-items-center'>
+                <div className='d-flex justify-content-center align-items-center w-100'>
 
                     <ArticlesButton
-                        small
+                        // small
                         active={showMenu}
                         onClick={() => {
-                            setShowMenu(prev => !prev)
+                            setShowMenu(!showMenu)
                         }}
                     >
                         <i className="fad fa-bars"></i>
                         <span>Menu</span>
                     </ArticlesButton>
 
-                    <div>
-                        {/* Y: {(playerLocation?.y || 0)} */}
-                    </div>
+                    {/* <div>
+
+                    </div> */}
 
                 </div>
 
             </div>
 
             <div className={`mobile-menu ${showMenu && 'show'}`}>
-                <LeftPanelContent />
+                <div className='mx-auto' style={{ width: "300px" }}>
+                    <LeftPanelContent />
+                </div>
             </div>
 
             {/* <TouchControls
@@ -155,6 +156,8 @@ export default function IceSlideGamePage() {
             </div> */}
 
             <div className='canvas-wrap'>
+
+                <TouchControls />
 
                 <GameCanvas
                     key={sceneKey}

@@ -3,8 +3,9 @@ import { useFrame } from "@react-three/fiber";
 import { useCylinder } from "@react-three/cannon";
 import { ModelWheel } from "../Models/Wheel";
 import { useIceSlideStore } from "@/hooks/useIceSlideStore";
+import { Billboard, Text } from "@react-three/drei";
 
-function DummyPlayer({ position, hitPower, hitRotation }) {
+function DummyPlayer({ position, hitPower, hitRotation, nickname }) {
 
     const launchPlayers = useIceSlideStore(state => state.launchPlayers)
 
@@ -73,17 +74,45 @@ function DummyPlayer({ position, hitPower, hitRotation }) {
 
             </mesh>
 
-            <group ref={puckRef} rotation={[0, 0, 0]}>
+            <group ref={puckRef} rotation={[0, (hitRotation * Math.PI) / 180, 0]}>
+
+                <Billboard>
+                    <Text
+                        position={[0, 5, 0]}
+                        fontSize={0.5}
+                        color="black"
+                        scale={5}
+                        anchorX="center"
+                        anchorY="middle"
+                    >
+                        {nickname}
+                    </Text>
+                </Billboard>
 
                 <ModelWheel
                     scale={10}
                     position={[0, -1.1, 0]}
                 />
 
-                {/* <mesh castShadow>
-                    <cylinderGeometry args={[3, 3, 1]} />
+                {/* Direction Arrow */}
+                <mesh castShadow position={[0, 0, (hitPower / 2)]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <cylinderGeometry
+                        args={[0.5, 0.5, hitPower]}
+                    />
                     <meshStandardMaterial color="black" />
-                </mesh> */}
+
+                    <mesh
+                        castShadow
+                        position={[0, -(hitPower / 2), 0]}
+                        rotation={[0, 0, 0]}
+                    >
+                        <cylinderGeometry
+                            args={[3, 0, 5]}
+                        />
+                        <meshStandardMaterial color="black" />
+                    </mesh>
+
+                </mesh>
 
             </group>
 

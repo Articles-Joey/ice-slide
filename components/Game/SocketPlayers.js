@@ -13,6 +13,7 @@ export default function SocketPlayers() {
                         position={[player?.x || 0, 1.5, player?.z || 0]}
                         hitPower={player?.hitPower || 0}
                         hitRotation={player?.hitRotation || 0}
+                        nickname={player?.nickname || "Player"}
                     />
                 </group>
             ))}

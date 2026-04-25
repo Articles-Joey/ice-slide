@@ -13,12 +13,23 @@ i {
     margin-right: 0.2rem;
 }
 
-body {
+body,
+:root {
     --bs-body-bg: #013d67 !important;
+    --bs-body-bg-rgb: rgb(1, 61, 103) !important;
     --bs-body-color: #fff !important;
 }
 
-.btn-articles, .btn-outline-dark {
+.btn-articles,
+.btn-outline-dark {
     background: rgb(9 119 198) !important;
     color: #fff !important;
+}
+
+.stats-overlay {
+    position: fixed;
+    top: 0;
+    right: 0 !important;
+    left: initial !important;
+    z-index: 4;
 }

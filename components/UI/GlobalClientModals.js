@@ -1,6 +1,7 @@
 "use client";
 import { useAudioStore } from '@/hooks/useAudioStore';
 import { useStore } from '@/hooks/useStore';
+import useTouchControlsStore from '@/hooks/useTouchControlsStore';
 import dynamic from 'next/dynamic'
 
 const InfoModal = dynamic(
@@ -54,6 +55,7 @@ export default function GlobalClientModals() {
                     setShow={setShowSettingsModal}
                     store={useStore}
                     useAudioStore={useAudioStore}
+                    useTouchControlsStore={useTouchControlsStore}
                     config={{
                         tabs: {
                             'Graphics': {
@@ -73,12 +75,12 @@ export default function GlobalClientModals() {
                                 ]
                             },
                             'Controls': {
-                                defaultKeyBindings: {
-                                    // moveUp: "W",
-                                    // moveDown: "S",
-                                    // moveLeft: "A",
-                                    // moveRight: "D",
-                                }
+                                // defaultKeyBindings: {
+                                //     // moveUp: "W",
+                                //     // moveDown: "S",
+                                //     // moveLeft: "A",
+                                //     // moveRight: "D",
+                                // }
                             },
                             'Multiplayer': {
                                 visible: false,
