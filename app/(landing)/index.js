@@ -16,6 +16,7 @@ import IsDev from '@/components/UI/IsDev';
 // import { ChromePicker } from 'react-color';
 import { useSocketStore } from '@/hooks/useSocketStore';
 
+import ViewUserModal from '@articles-media/articles-dev-box/ViewUserModal';
 import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
 import useUserToken from '@articles-media/articles-dev-box/useUserToken';
 import { useStore } from '@/hooks/useStore';
@@ -36,6 +37,11 @@ const Ad = dynamic(() =>
 
 const ReturnToLauncherButton = dynamic(() =>
     import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
+    { ssr: false }
+);
+
+const SignInButton = dynamic(() =>
+    import('@articles-media/articles-dev-box/SignInButton'),
     { ssr: false }
 );
 
@@ -389,6 +395,12 @@ export default function IceSlideLobbyPage() {
 
                     </div>
 
+                    {/* <div>This: {userDetails}</div> */}
+
+                    {!userTokenLoading &&
+                        <SessionButton />
+                    }
+
                     <ReturnToLauncherButton />
 
                 </div>
@@ -410,7 +422,89 @@ export default function IceSlideLobbyPage() {
                 />
 
             </div>
-            
+
         </div>
     );
+}
+
+function SessionButton() {
+
+    const {
+        data: userToken,
+        error: userTokenError,
+        isLoading: userTokenLoading,
+        mutate: userTokenMutate
+    } = useUserToken(
+        "3023"
+    );
+
+    const {
+        data: userDetails,
+        error: userDetailsError,
+        isLoading: userDetailsLoading,
+        mutate: userDetailsMutate
+    } = useUserDetails({
+        token: userToken
+    });
+
+    // const baseUrl = process.env.NODE_ENV === 'production' ? "https://accounts.articles.media" : 'http://localhost:3012';
+
+    const baseUrl = '';
+
+    const logoutLink = `${baseUrl}/api/signout`
+
+    return (
+        <>
+            {!userDetails ?
+                <SignInButton className={"mb-2"} />
+                :
+                <div className='w-100 d-flex align-items-stretch'>
+
+                    <ViewUserModal
+                        buttonType="Link"
+                        className={"w-100"}
+                    >
+                        <ArticlesButton
+                            className={"mb-2 w-100"}
+                            small
+                            onClick={() => {
+                                // setShowSignOutModal(true)
+                                console.log("userDetails", userDetails)
+                            }}
+                        >
+                            <i className="fad fa-sign-out"></i>
+                            Logged in as {userDetails?.display_name || "Unknown User"}
+                        </ArticlesButton>
+                    </ViewUserModal>
+
+                    <ArticlesButton
+                        className={"mb-2"}
+                        small
+                        onClick={() => {
+
+                            fetch(logoutLink, {
+                                method: 'GET',
+                                headers: {}
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log("Logout successful:", data);
+                                    // window.location.reload();
+                                    userTokenMutate(null);
+                                    userDetailsMutate(null);
+                                })
+                                .catch((error) => {
+                                    console.error("Logout error:", error);
+                                });
+
+                        }}
+                    >
+                        <i className="fad fa-sign-out"></i>
+                    </ArticlesButton>
+
+                </div>
+            }
+        </>
+    )
+
 }

@@ -9,6 +9,10 @@ export default function GameDetailsPanel() {
 
             <div className="card-body">
 
+                <div className="h6 mb-2 d-flex justify-content-between">
+                    <RoundAndTimer />
+                </div>
+
                 <div>Players</div>
 
                 {players.map((player, index) => (
@@ -16,26 +20,56 @@ export default function GameDetailsPanel() {
 
                         {/* <div className="player-color" style={{ backgroundColor: player.color }}></div> */}
 
-                        <div className="small">ID: {player.id}</div>
-                        <div className="player-name">{player.nickname || "?"}</div>
-                        <div className="player-name">Ready: {player.ready ? "Yes" : "No"}</div>
+                        <div className="" style={{ fontSize: "0.6rem" }}>ID: {player.id}</div>
 
-                        <div>X: {player?.x || 0} | Z: {player?.z || 0}</div>
+                        <div className="player-name d-flex align-items-center">
+                            <span
+                                className={`badge ${player.ready ? 'bg-success' : 'bg-danger'} me-1`}
+                                style={{
+                                    fontSize: "0.6rem"
+                                }}
+                            >
+                                {player.ready ? "Ready" : "Not Ready"}
+                            </span>
+                            {player.nickname || "?"}
+                        </div>
 
-                        {
-                        // player.ready 
-                        true
-                        &&
-                            <div className="">
-                                <div>{player.hitPower}</div>
-                                <div>{player.hitRotation}</div>
+                        {/* <div className="player-name">Ready: {player.ready ? "Yes" : "No"}</div> */}
+
+                        <div className="d-flex justify-content-between">
+
+                            <div>X: {player?.position?.x?.toFixed(2) || 0} | Z: {player?.position?.z?.toFixed(2) || 0}</div>
+
+                            <div className="d-flex">
+                                <div className="me-2">
+                                    <i className="fad fa-rocket"></i>
+                                    {player.hitPower}
+                                </div>
+                                <div>
+                                    <i className="fad fa-undo"></i>
+                                    {player.hitRotation}
+                                </div>
                             </div>
-                        }
+
+                        </div>
+
                     </div>
                 ))}
 
             </div>
 
+        </div>
+    )
+}
+
+function RoundAndTimer() {
+
+    const gameState = useIceSlideStore(state => state.gameState)
+
+    return (
+        <div className="d-flex align-items-center w-100 justify-content-between">
+            <div>Round: {gameState?.round || 0}</div>
+            <div>Time: {gameState?.timer || 0}</div>
         </div>
     )
 }

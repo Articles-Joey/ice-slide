@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { Canvas } from "@react-three/fiber"
-import { Sky, OrbitControls, Stats, Image } from "@react-three/drei";
+import { Sky, OrbitControls, Stats, Image, Environment } from "@react-three/drei";
 
 import { Debug, Physics } from "@react-three/cannon";
 import { degToRad } from "three/src/math/MathUtils";
@@ -27,11 +27,18 @@ import { ModelSnowman } from "../Models/Snowman";
 import SocketPlayers from "./SocketPlayers";
 import { ModelBoat } from "../Models/Boat";
 import ControlsHandler from "./ControlsHandler";
+import WalrusWithLogic from "./WalrusWithLogic";
+// import { ModelCog } from "../Models/Cog";
+import { ModelCogFixed } from "../Models/CogFixed";
+import SocketItems from "./SocketItems";
+import { ModelDonaldsBoat } from "../Models/DonaldsBoat";
+import { ModelDonaldDuck } from "../Models/DonaldDuck";
 
 function GameCanvas(props) {
 
     const debug = useStore(state => state.debug);
     const darkMode = useStore(state => state.darkMode)
+    const toontownMode = useStore(state => state.toontownMode);
 
     return (
         <Canvas camera={{ position: [-10, 100, 100], fov: 50 }}>
@@ -49,11 +56,13 @@ function GameCanvas(props) {
             // autoRotate={gameState?.status == 'In Lobby'}
             />
 
+            {/* <Environment preset="city" /> */}
+
             {darkMode ?
                 <>
                     <ambientLight intensity={0} />
                     <spotLight intensity={10000} position={[0, 100, 0]} angle={5} penumbra={1} />
-                    
+
                     <pointLight position={[-100, 30, -100]} color={"red"} intensity={10000} />
 
                     <Sky
@@ -69,8 +78,6 @@ function GameCanvas(props) {
                     />
                 </>
             }
-
-
 
             {/* <pointLight position={[-10, -10, -10]} /> */}
 
@@ -116,20 +123,41 @@ function GameCanvas(props) {
 
             <Penguins />
 
-            <ModelBoat
-                position={[-90, 2, -90]}
-                scale={0.06}
-                rotation={[0, degToRad(45), 0]}
-            />
+            {toontownMode ?
+                <>
+                    <ModelDonaldsBoat
+                        position={[-100, 2, -120]}
+                        scale={300}
+                        rotation={[0, degToRad(140), 0]}
+                    />
+                    <ModelDonaldDuck 
+                        position={[-110, 14, -100]}
+                        scale={1500}
+                        rotation={[0, degToRad(45), 0]}
+                    />
+                </>
+                :
+                <ModelBoat
+                    position={[-90, 2, -90]}
+                    scale={0.06}
+                    rotation={[0, degToRad(45), 0]}
+                />
+            }
 
-            <ModelWalrus
+            <WalrusWithLogic
                 position={[0, 31.25, 100]}
                 scale={0.01}
             />
 
-            <ModelSnowman
-                position={[0, 31.25, -100]}
-            />
+            {toontownMode ?
+                <ModelCogFixed
+                    position={[0, 29.5, -100]}
+                />
+                :
+                <ModelSnowman
+                    position={[0, 31.25, -100]}
+                />
+            }
 
             <Physics>
 
@@ -139,16 +167,17 @@ function GameCanvas(props) {
                     {/* <PlayerProjectile /> */}
 
                     <SocketPlayers />
+                    <SocketItems />
 
-                    <Barrel
+                    {/* Now server side */}
+                    {/* <Barrel
                         position={[20, 1, -10]}
                         args={[2, 2, 6, 10]}
                     />
-
                     <Star
                         position={[-20, 1, 10]}
                         args={[2, 2, 6, 10]}
-                    />
+                    /> */}
 
                     {/* <DummyPlayer
                         position={[40, 1.5, -40]}

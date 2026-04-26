@@ -176,6 +176,10 @@ export default function SocketLogicHandler(props) {
             console.log(`game-update`, msg)
             const setPlayers = useIceSlideStore.getState().setPlayers
             setPlayers(msg.players)
+            const setItems = useIceSlideStore.getState().setItems
+            setItems(msg.items)
+            const setGameState = useIceSlideStore.getState().setGameState
+            setGameState(msg)
         });
 
         // router.events.on('routeChangeStart', handleRouteChange)

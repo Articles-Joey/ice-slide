@@ -23,6 +23,20 @@ export const useIceSlideStore = create((set) => ({
         }))
     },
 
+    items: [],
+    setItems: (newValue) => {
+        set((prev) => ({
+            items: newValue
+        }))
+    },
+
+    gameState: {},
+    setGameState: (newValue) => {
+        set((prev) => ({
+            gameState: newValue
+        }))
+    },
+
     launchPlayer: false,
     setLaunchPlayer: (newValue) => {
         set((prev) => ({

@@ -3,14 +3,21 @@ import { useFrame } from "@react-three/fiber";
 import { useCylinder } from "@react-three/cannon";
 import { ModelWheel } from "../Models/Wheel";
 import { useIceSlideStore } from "@/hooks/useIceSlideStore";
+import { useSocketStore } from "@/hooks/useSocketStore";
 import { Billboard, Text } from "@react-three/drei";
+import { ModelToonDogHead } from "../Models/ToonDogHead";
+import { useStore } from "@/hooks/useStore";
 
-function DummyPlayer({ position, hitPower, hitRotation, nickname }) {
+function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socketId }) {
 
     const launchPlayers = useIceSlideStore(state => state.launchPlayers)
 
     const puckRef = useRef()
     const launched = useRef(false)
+    const positionRef = useRef(position)
+
+    const toontownMode = useStore(state => state.toontownMode);
+    const debug = useStore(state => state.debug);
 
     const [ref, api] = useCylinder(() => ({
         mass: 10,
@@ -44,12 +51,26 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname }) {
 
     }, [launchPlayers])
 
+    useEffect(() => {
+        if (!socketId) return;
+        const interval = setInterval(() => {
+            const [x, y, z] = positionRef.current;
+            useSocketStore.getState().socket?.emit('game:ice-slide:position', {
+                socketId,
+                x, y, z,
+                server,
+            });
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [socketId, server]);
+
     useFrame(() => {
 
         if (puckRef.current) {
             // Get the current position of the cylinder from the physics API
             api.position.subscribe((position) => {
 
+                positionRef.current = position;
                 puckRef.current.position.set(...position);
 
                 if (position[1] < -10) {
@@ -69,8 +90,12 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname }) {
 
             <mesh ref={ref} castShadow>
 
-                <cylinderGeometry args={[3, 3, 1, 32]} />
-                <meshStandardMaterial color="red" />
+                {debug &&
+                    <>
+                        <cylinderGeometry args={[3, 3, 1, 32]} />
+                        <meshStandardMaterial color="red" />
+                    </>
+                }
 
             </mesh>
 
@@ -93,6 +118,13 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname }) {
                     scale={10}
                     position={[0, -1.1, 0]}
                 />
+
+                {toontownMode &&
+                    <ModelToonDogHead
+                        scale={0.25}
+                        position={[-0, 1.5, -0.75]}
+                    />
+                }
 
                 {/* Direction Arrow */}
                 <mesh castShadow position={[0, 0, (hitPower / 2)]} rotation={[-Math.PI / 2, 0, 0]}>

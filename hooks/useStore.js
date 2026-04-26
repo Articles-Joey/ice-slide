@@ -70,6 +70,14 @@ export const useStore = create()(
       },
       toggleDarkMode: () => set({ darkMode: !get().darkMode }),
 
+      toontownMode: false,
+      setToontownMode: (newValue) => {
+        set((prev) => ({
+          toontownMode: newValue
+        }))
+      },
+      toggleToontownMode: () => set({ toontownMode: !get().toontownMode }),
+
       updateCamera: null,
       setUpdateCamera: (updateCamera) => set({ updateCamera }),
 
@@ -132,6 +140,7 @@ export const useStore = create()(
       partialize: (state) => ({
         nickname: state.nickname,
         character: state.character,
+        toontownMode: state.toontownMode,
         darkMode: state.darkMode,
         graphicsQuality: state.graphicsQuality,
         landingAnimation: state.landingAnimation,

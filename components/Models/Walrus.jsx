@@ -4,79 +4,14 @@ Command: npx gltfjsx@6.5.3 Walrus.glb -T
 Files: Walrus.glb [37.77KB] > F:\My Documents\Sites games\ice-slide\public\models\Walrus-transformed.glb [7.36KB] (81%)
 */
 
-import React, { useRef, useState, useEffect } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
-import { useStore } from '@/hooks/useStore'
 
 export function ModelWalrus(props) {
-  const group = useRef()
   const { nodes, materials } = useGLTF('models/Walrus-transformed.glb')
 
-  const graphicsQuality = useStore(state => state.graphicsQuality)
-
-  const initialX = props.position?.[0] || 0
-  const initialZ = props.position?.[2] || 0
-
-  const [targetPos, setTargetPos] = useState(new THREE.Vector3(initialX, 0, initialZ))
-  const [isMoving, setIsMoving] = useState(false)
-  const currentPos = useRef(new THREE.Vector3(initialX, 0, initialZ))
-  const targetRotation = useRef(0)
-
-  useEffect(() => {
-    if (graphicsQuality === 'Low') return
-
-    let timeout
-    const pickNewTarget = () => {
-      // Pick random point in 1x1 area around initial position
-      const x = initialX + (Math.random() - 0.5) * 10
-      const z = initialZ + (Math.random() - 0.5) * 10
-      const newTarget = new THREE.Vector3(x, 0, z)
-      
-      setTargetPos(newTarget)
-      setIsMoving(true)
-      
-      // Calculate rotation to face the target
-      targetRotation.current = Math.atan2(
-        newTarget.x - currentPos.current.x,
-        newTarget.z - currentPos.current.z
-      )
-    }
-
-    if (!isMoving) {
-      const waitTime = Math.random() * 4000 + 1000 // 1-5 seconds
-      timeout = setTimeout(pickNewTarget, waitTime)
-    }
-
-    return () => clearTimeout(timeout)
-  }, [isMoving, initialX, initialZ, graphicsQuality])
-
-  useFrame((state, delta) => {
-    if (group.current && graphicsQuality !== 'Low') {
-      if (isMoving) {
-        // Move towards target
-        currentPos.current.lerp(targetPos, 0.05)
-        group.current.position.x = currentPos.current.x
-        group.current.position.z = currentPos.current.z
-
-        // Rotate towards target rotation
-        group.current.rotation.y = THREE.MathUtils.lerp(
-          group.current.rotation.y,
-          targetRotation.current,
-          0.1
-        )
-
-        // Check if arrived
-        if (currentPos.current.distanceTo(targetPos) < 0.01) {
-          setIsMoving(false)
-        }
-      }
-    }
-  })
-
   return (
-    <group ref={group} {...props} position={graphicsQuality === 'Low' ? props.position : [currentPos.current.x, props.position?.[1] || 0, currentPos.current.z]} dispose={null}>
+    <group {...props} dispose={null} scale={0.01}>
       <mesh geometry={nodes['Platonic1-Mesh'].geometry} material={materials.black} />
       <mesh geometry={nodes['Platonic1-Mesh_1'].geometry} material={materials.white} />
       <mesh geometry={nodes['Platonic1-Mesh_2'].geometry} material={materials.brown} />

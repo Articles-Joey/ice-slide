@@ -1,6 +1,10 @@
 import { useCylinder } from "@react-three/cannon";
+import { ModelBarrel } from "../Models/Barrel";
+import { useStore } from "@/hooks/useStore";
 
 function Barrel({ position, args }) {
+
+    const debug = useStore(state => state.debug);
 
     const [ref, api] = useCylinder(() => ({
         mass: 10,
@@ -11,8 +15,17 @@ function Barrel({ position, args }) {
 
     return (
         <mesh ref={ref} castShadow>
-            <cylinderGeometry args={args} />
-            <meshStandardMaterial color="red" />
+
+            <ModelBarrel scale={17} position={[0, -1.25, 0]} />
+
+            {debug &&
+                <>
+                    <cylinderGeometry args={args} />
+                    <meshStandardMaterial color="red" />
+                </>
+            }
+
+
         </mesh>
     )
 

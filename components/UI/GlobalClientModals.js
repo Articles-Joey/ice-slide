@@ -86,7 +86,7 @@ export default function GlobalClientModals() {
                                 visible: false,
                             },
                             'Other': {
-
+                                toontownMode: true,
                             }
                         }
                     }}
