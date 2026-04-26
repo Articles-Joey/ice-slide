@@ -1,5 +1,6 @@
 "use client";
 import { useAudioStore } from '@/hooks/useAudioStore';
+import { useSocketStore } from '@/hooks/useSocketStore';
 import { useStore } from '@/hooks/useStore';
 import useTouchControlsStore from '@/hooks/useTouchControlsStore';
 import dynamic from 'next/dynamic'
@@ -56,6 +57,7 @@ export default function GlobalClientModals() {
                     store={useStore}
                     useAudioStore={useAudioStore}
                     useTouchControlsStore={useTouchControlsStore}
+                    useSocketStore={useSocketStore}
                     config={{
                         tabs: {
                             'Graphics': {
@@ -83,7 +85,7 @@ export default function GlobalClientModals() {
                                 // }
                             },
                             'Multiplayer': {
-                                visible: false,
+                                serverUrl: true,
                             },
                             'Other': {
                                 toontownMode: true,

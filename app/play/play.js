@@ -17,6 +17,8 @@ import { useSocketStore } from '@/hooks/useSocketStore';
 import ControlsHandler from '@/components/Game/ControlsHandler';
 import { useStore } from '@/hooks/useStore';
 import TouchControls from '@/components/UI/TouchControls';
+import GameOverModal from '@/components/UI/GameOverModal';
+import { useIceSlideStore } from '@/hooks/useIceSlideStore';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -47,6 +49,8 @@ export default function IceSlideGamePage() {
     const sceneKey = useStore(state => state.sceneKey)
     const showMenu = useStore(state => state.showMenu)
     const setShowMenu = useStore(state => state.setShowMenu)
+
+    const showGameOverModal = useStore(state => state.showGameOverModal)
 
     // const [ cameraMode, setCameraMode ] = useState('Player')
 
@@ -107,6 +111,13 @@ export default function IceSlideGamePage() {
             className={`ice-slide-game-page ${isFullscreen && 'fullscreen'}`}
             id="ice-slide-game-page"
         >
+
+            {showGameOverModal &&
+                <GameOverModal
+                    show={showGameOverModal}
+                    setShow={useStore.getState().setShowGameOverModal}
+                />
+            }
 
             <div className="menu-bar card card-articles p-1 justify-content-center">
 

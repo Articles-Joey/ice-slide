@@ -88,6 +88,17 @@ export default function SocketLogicHandler(props) {
     // }, [initialConnectAttempt])
 
     useEffect(() => {
+        if (connected) {
+            
+        } else {
+            setLobbyDetails({
+                players: [],
+                games: [],
+            })
+        }
+    }, [connected])
+
+    useEffect(() => {
 
         // Makes sure connect is only called once during reactStrictMode
         if (!initialized.current) {
@@ -161,7 +172,7 @@ export default function SocketLogicHandler(props) {
         });
 
         socket.on(`launch`, function (msg) {
-            
+
             console.log(`launch event sent from server`, msg)
             const setLaunchPlayers = useIceSlideStore.getState().setLaunchPlayers
             setLaunchPlayers(true)
@@ -182,6 +193,12 @@ export default function SocketLogicHandler(props) {
             setGameState(msg)
         });
 
+        socket.on(`game-over`, function (msg) {
+            console.log(`game-over`, msg)
+            const setShowGameOverModal = useStore.getState().setShowGameOverModal
+            setShowGameOverModal(msg)
+        });
+
         // router.events.on('routeChangeStart', handleRouteChange)
 
         return () => {
@@ -193,6 +210,7 @@ export default function SocketLogicHandler(props) {
             socket.off('userCount', userCount);
             socket.off(`game:${game_key}-landing-details`);
             socket.off(`game:${game_key}:game-update`);
+            socket.off(`game-over`);
             // router.events.off('routeChangeStart', handleRouteChange)
         };
 

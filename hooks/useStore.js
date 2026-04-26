@@ -112,6 +112,10 @@ export const useStore = create()(
       setShowCreditsModal: (value) => set({ showCreditsModal: value }),
       toggleCreditsModal: () => set({ showCreditsModal: !get().showCreditsModal }),
 
+      showGanmeOverModal: false,
+      setShowGameOverModal: (value) => set({ showGameOverModal: value }),
+      toggleGameOverModal: () => set({ showGameOverModal: !get().showGameOverModal }),
+
       graphicsQuality: "High",
       setGraphicsQuality: (value) => set({ graphicsQuality: value }),
 

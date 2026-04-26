@@ -16,7 +16,7 @@ export default function GameDetailsPanel() {
                 <div>Players</div>
 
                 {players.map((player, index) => (
-                    <div key={index} className="player-entry border border-white p-2">
+                    <div key={index} className="player-entry border p-2">
 
                         {/* <div className="player-color" style={{ backgroundColor: player.color }}></div> */}
 

@@ -13,7 +13,7 @@ export default function SocketPlayers() {
 
     return (
         <group>
-            {players.map((player, index) => (
+            {players?.length > 0 && players?.map((player, index) => (
                 <group key={index} position={[0, 0, 0]}>
                     <DummyPlayer 
                         position={[player?.x || 0, 1.5, player?.z || 0]}

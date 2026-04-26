@@ -2,7 +2,7 @@
 
 ![Game Preview](/public/img/game-preview.webp)
 
-Get your tire as close to the target in the center as possible. Watch out for other players and obstacles. Collect the barrels to earn bonus points!
+Get your tire as close to the target as possible. Watch out for other players and obstacles. Collect the barrels to earn bonus points!
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ npm run dev
 
 ## Multiplayer
 
-Aiming to have multiplayer via P2P and Websockets. Websocket backend code is not in this repo or available at this time. P2P code will be included here.
+Multiplayer via WebSockets. Websocket backend code is not in this repo or available at this time.
 
 ## Inspiration
 
@@ -39,3 +39,11 @@ This game was inspired by a mini game inside the game Toontown Online.
 [Penguin Model - Google](https://poly.pizza/m/fBXvsC6pe_V)  
 [Gear Model - Google](https://poly.pizza/m/cMM3raHMCug)  
 [Bear Model - Google](https://poly.pizza/m/0PXWfxfb0Hu)  
+[Toontown Models - Disney](https://en.wikipedia.org/wiki/Toontown_Online)  
+
+
+Landing Page Preview  
+![Game Preview](/public/img/landing-preview.webp)  
+
+Old Game Preview  
+![Game Preview](/public/img/old-game-preview.webp)

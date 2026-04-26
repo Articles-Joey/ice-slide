@@ -47,6 +47,7 @@ const SignInButton = dynamic(() =>
 
 const game_key = 'ice-slide'
 const game_name = 'Ice Slide'
+const game_port = "3023"
 
 export default function IceSlideLobbyPage() {
 
@@ -64,7 +65,7 @@ export default function IceSlideLobbyPage() {
         isLoading: userTokenLoading,
         mutate: userTokenMutate
     } = useUserToken(
-        "3023"
+        game_port
     );
 
     const {
@@ -79,6 +80,7 @@ export default function IceSlideLobbyPage() {
     const nickname = useStore((state) => state.nickname);
     const setNickname = useStore((state) => state.setNickname);
     const randomNickname = useStore((state) => state.randomNickname);
+    const toontownMode = useStore((state) => state.toontownMode);
 
     const _hasHydrated = useStore((state) => state._hasHydrated);
 
@@ -94,34 +96,17 @@ export default function IceSlideLobbyPage() {
 
     const lobbyDetails = useStore((state) => state.lobbyDetails);
 
-    // const theme = useIceSlideStore(state => state.theme);
-    // const toggleTheme = useIceSlideStore(state => state.toggleTheme);
-
-    // const userReduxState = useSelector((state) => state.auth.user_details)
-    // const userReduxState = false
-
-    // const [nickname, setNickname] = useLocalStorageNew("game:nickname", userReduxState.display_name)
-
-    // const [showInfoModal, setShowInfoModal] = useState(false)
-    // const [showSettingsModal, setShowSettingsModal] = useState(false)
-    // const [showPrivateGameModal, setShowPrivateGameModal] = useState(false)
-
-    // const [lobbyDetails, setLobbyDetails] = useState({
-    //     players: [],
-    //     games: [],
-    // })
-
     useEffect(() => {
 
-        if (socket.connected) {
+        if (connected) {
             socket.emit('join-room', `game:${game_key}-landing`);
         }
 
         return function cleanup() {
-            socket.emit('leave-room', `game:${game_key}-landing`)
+            socket?.emit('leave-room', `game:${game_key}-landing`);
         };
 
-    }, [socket.connected]);
+    }, [connected]);
 
     return (
 
@@ -140,16 +125,37 @@ export default function IceSlideLobbyPage() {
 
                 <div style={{ "width": "20rem" }}>
 
-                    <img
-                        width={'100%'}
-                        src={"img/logo.png"}
-                        alt="Logo"
-                        style={{
-                            position: 'relative',
-                            zIndex: 1,
-                            margin: "0 auto"
-                        }}
-                    ></img>
+                    <div className='position-relative'>
+                        {toontownMode &&
+                            <img
+                                width={'100%'}
+                                src={"img/toontown-icon.webp"}
+                                alt="Logo"
+                                style={{
+                                    position: 'absolute',
+                                    // position: 'relative',
+                                    zIndex: 2,
+                                    bottom: 0,
+                                    // top: -75,
+                                    left: "50%",
+                                    transform: 'translateX(-50%)',
+                                    objectFit: 'contain',
+                                    width: '100px',
+                                    // margin: "0 auto"
+                                }}
+                            ></img>
+                        }
+                        <img
+                            width={'100%'}
+                            src={"img/logo.png"}
+                            alt="Logo"
+                            style={{
+                                position: 'relative',
+                                zIndex: 1,
+                                margin: "0 auto"
+                            }}
+                        ></img>
+                    </div>
 
                     <div
                         className="card card-articles card-sm mb-3"
@@ -362,7 +368,7 @@ export default function IceSlideLobbyPage() {
                                 Info
                             </ArticlesButton>
 
-                            <Link
+                            <a
                                 href={'https://github.com/Articles-Joey/ice-slide'}
                                 className='w-50'
                                 target='_blank'
@@ -378,7 +384,7 @@ export default function IceSlideLobbyPage() {
                                     <i className="fab fa-github"></i>
                                     GitHub
                                 </ArticlesButton>
-                            </Link>
+                            </a>
 
                             <ArticlesButton
                                 className={`w-50`}
@@ -397,9 +403,9 @@ export default function IceSlideLobbyPage() {
 
                     {/* <div>This: {userDetails}</div> */}
 
-                    {!userTokenLoading &&
-                        <SessionButton />
-                    }
+                    <SessionButton
+                        port={game_port}
+                    />
 
                     <ReturnToLauncherButton />
 

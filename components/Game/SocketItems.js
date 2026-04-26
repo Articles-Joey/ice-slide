@@ -13,7 +13,7 @@ export default function SocketItems() {
 
     return (
         <group>
-            {items.map((item, index) => (
+            {items?.length > 0 && items?.map((item, index) => (
                 <group key={index} position={[0, 0, 0]}>
                     <Obstacle
                         position={[item?.x || 0, 1.5, item?.z || 0]}

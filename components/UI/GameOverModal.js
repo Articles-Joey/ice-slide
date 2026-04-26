@@ -9,11 +9,11 @@ import ViewUserModal from "@/components/UI/ViewUserModal"
 
 import IsDev from "@/components/UI/IsDev";
 import ArticlesButton from "./Button";
+import Link from "next/link";
 
-export default function GameInfoModal({
+export default function GameOverModal({
     show,
     setShow,
-    credits
 }) {
 
     const [showModal, setShowModal] = useState(true)
@@ -21,7 +21,7 @@ export default function GameInfoModal({
     return (
         <>
             <Modal
-                className="articles-modal games-info-modal"
+                className="articles-modal games-over-modal"
                 size='md'
                 show={showModal}
                 centered
@@ -35,27 +35,41 @@ export default function GameInfoModal({
             >
 
                 <Modal.Header closeButton>
-                    <Modal.Title>Game Info</Modal.Title>
+                    <Modal.Title>Game Over</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body className="flex-column p-0">
 
-                    <div className="ratio ratio-16x9"><img src={"img/game-preview.webp"}></img></div>
-
                     <div className="p-3">
-                        Get your tire as close to the target in the center as possible. Watch out for other players and obstacles. Collect the barrels to earn bonus points!
+
+                        <div className="mb-3">The winner was <b>{show?.winner?.nickname || "Unknown"}</b> with a distance of <b>{show?.winner?.distance?.toFixed(2) || 0}</b> meters!</div>
+
+                        <div className="mb-2">Here is how everyone else did:</div>
+
+                        {show?.rankings?.map((player, index) => (
+                            <div key={index}>
+                                <b>{player.nickname || "Unknown"}</b>: {player.distance?.toFixed(2) || 0} meters
+                            </div>
+                        ))}
+
                     </div>
 
                 </Modal.Body>
 
                 <Modal.Footer className="justify-content-between">
 
-                    <div></div>
+                    <Link href="/">
+                        <ArticlesButton variant="outline-dark" onClick={() => {
+                            setShow(false)
+                        }}>
+                            Close
+                        </ArticlesButton>
+                    </Link>
 
                     <ArticlesButton variant="outline-dark" onClick={() => {
                         setShow(false)
                     }}>
-                        Close
+                        Play Again
                     </ArticlesButton>
 
                 </Modal.Footer>
