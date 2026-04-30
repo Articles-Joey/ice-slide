@@ -163,14 +163,6 @@ export default function SocketLogicHandler(props) {
             }
         });
 
-        socket.on(`game:${game_key}-landing-details`, function (msg) {
-            console.log(`game:${game_key}-landing-details`, msg)
-
-            if (JSON.stringify(msg) !== JSON.stringify(lobbyDetails)) {
-                setLobbyDetails(msg)
-            }
-        });
-
         socket.on(`launch`, function (msg) {
 
             console.log(`launch event sent from server`, msg)
@@ -209,7 +201,7 @@ export default function SocketLogicHandler(props) {
             socket.off('launch');
             socket.off('userCount', userCount);
             socket.off(`game:${game_key}-landing-details`);
-            socket.off(`game:${game_key}:game-update`);
+            socket.off(`game-update`);
             socket.off(`game-over`);
             // router.events.off('routeChangeStart', handleRouteChange)
         };

@@ -40,7 +40,9 @@ export default function GameInfoModal({
 
                 <Modal.Body className="flex-column p-0">
 
-                    <div className="ratio ratio-16x9"><img src={"img/game-preview.webp"}></img></div>
+                    <div className="ratio ratio-16x9">
+                        <img src={"img/game-preview.webp"}></img>
+                    </div>
 
                     <div className="p-3">
                         Get your tire as close to the target in the center as possible. Watch out for other players and obstacles. Collect the barrels to earn bonus points!
