@@ -1,31 +1,26 @@
 "use client"
-import { useEffect, useContext, useState, useRef, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 import dynamic from 'next/dynamic'
 
-import ArticlesButton from '@/components/UI/Button';
-
 import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
-import { useControllerStore } from '@/hooks/useControllerStore';
 
 import LeftPanelContent from '@/components/UI/LeftPanel';
 import { useSocketStore } from '@/hooks/useSocketStore';
-// import { useIceSlideStore } from '@/hooks/useIceSlideStore';
-// import { useHotkeys } from 'react-hotkeys-hook';
-import ControlsHandler from '@/components/Game/ControlsHandler';
 import { useStore } from '@/hooks/useStore';
 import TouchControls from '@/components/UI/TouchControls';
 import GameOverModal from '@/components/UI/GameOverModal';
-import { useIceSlideStore } from '@/hooks/useIceSlideStore';
+
+import GameMenu from '@articles-media/articles-dev-box/GameMenu';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
 });
 
-const game_key = 'ice-slide'
 const game_name = 'Ice Slide'
+const game_key = 'ice-slide'
 
 export default function IceSlideGamePage() {
 
@@ -41,20 +36,11 @@ export default function IceSlideGamePage() {
     const params = Object.fromEntries(searchParams.entries());
     const { server } = params
 
-    // const { controllerState, setControllerState } = useControllerStore()
-    // const [showControllerState, setShowControllerState] = useState(false)
-
     const nickname = useStore(state => state.nickname)
-
+    const sidebar = useStore(state => state.sidebar);
     const sceneKey = useStore(state => state.sceneKey)
-    const showMenu = useStore(state => state.showMenu)
-    const setShowMenu = useStore(state => state.setShowMenu)
 
     const showGameOverModal = useStore(state => state.showGameOverModal)
-
-    // const [ cameraMode, setCameraMode ] = useState('Player')
-
-    // const [players, setPlayers] = useState([])
 
     useEffect(() => {
 
@@ -74,41 +60,12 @@ export default function IceSlideGamePage() {
 
     }, [server, socket.connected, nickname]);
 
-    // const [showMenu, setShowMenu] = useState(false)
-
-    // const [touchControlsEnabled, setTouchControlsEnabled] = useLocalStorageNew("game:touchControlsEnabled", false)
-
-    // const [sceneKey, setSceneKey] = useState(0);
-
-    // const [gameState, setGameState] = useState(false)
-
-    // Function to handle scene reload
-    // const reloadScene = () => {
-    //     setSceneKey((prevKey) => prevKey + 1);
-    // };
-
     const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
-
-    // let panelProps = {
-    //     server,
-    //     players,
-    //     touchControlsEnabled,
-    //     setTouchControlsEnabled,
-    //     reloadScene,
-    //     // controllerState,
-    //     // isFullscreen,
-    //     // requestFullscreen,
-    //     // exitFullscreen,
-    //     setShowMenu
-    // }
-
-    const game_name = 'Ice Slide'
-    const game_key = 'ice-slide'
 
     return (
 
         <div
-            className={`ice-slide-game-page ${isFullscreen && 'fullscreen'}`}
+            className={`ice-slide-game-page ${isFullscreen && 'fullscreen'} ${sidebar && 'show-sidebar'}`}
             id="ice-slide-game-page"
         >
 
@@ -119,52 +76,13 @@ export default function IceSlideGamePage() {
                 />
             }
 
-            <div className="menu-bar card card-articles p-1 justify-content-center">
-
-                <div className='d-flex justify-content-center align-items-center w-100'>
-
-                    <ArticlesButton
-                        // small
-                        active={showMenu}
-                        onClick={() => {
-                            setShowMenu(!showMenu)
-                        }}
-                    >
-                        <i className="fad fa-bars"></i>
-                        <span>Menu</span>
-                    </ArticlesButton>
-
-                    {/* <div>
-
-                    </div> */}
-
-                </div>
-
-            </div>
-
-            <div className={`mobile-menu ${showMenu && 'show'}`}>
-                <div className='mx-auto' style={{ width: "300px" }}>
-                    <LeftPanelContent />
-                </div>
-            </div>
-
-            {/* <TouchControls
-                touchControlsEnabled={touchControlsEnabled}
-            /> */}
-
-            <div className='panel-left card rounded-0 d-none d-lg-flex'>
-                <LeftPanelContent />
-            </div>
-
-            {/* <div className='game-info'>
-                <div className="card card-articles card-sm">
-                    <div className="card-body">
-                        <pre> 
-                            {JSON.stringify(playerData, undefined, 2)}
-                        </pre>
-                    </div>
-                </div>
-            </div> */}
+            <GameMenu
+                useStore={useStore}
+                LeftPanelContent={LeftPanelContent}
+                menuBarStyle={"Bar"}
+                menuBarButtonPosition="Left"
+                sidebarStyle={"Static Panel"}
+            />
 
             <div className='canvas-wrap'>
 
@@ -172,10 +90,6 @@ export default function IceSlideGamePage() {
 
                 <GameCanvas
                     key={sceneKey}
-                // gameState={gameState}
-                // playerData={playerData}
-                // setPlayerData={setPlayerData}
-                // players={players}
                 />
 
             </div>

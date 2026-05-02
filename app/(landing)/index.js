@@ -405,6 +405,7 @@ export default function IceSlideLobbyPage() {
 
                     <SessionButton
                         port={game_port}
+                        friendsButton={true}
                     />
 
                     <ReturnToLauncherButton />
