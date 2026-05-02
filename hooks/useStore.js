@@ -2,31 +2,36 @@ import generateRandomNickname from '@/util/generateRandomNickname';
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
+import typicalZustandStoreExcludes from '@articles-media/articles-dev-box/typicalZustandStoreExcludes';
+import typicalZustandStoreStateSlice from '@articles-media/articles-dev-box/typicalZustandStoreStateSlice';
+
 export const useStore = create()(
   persist(
     (set, get) => ({
 
-      _hasHydrated: false,
-      setHasHydrated: (state) => {
-        set({
-          _hasHydrated: state
-        });
-      },
+      ...typicalZustandStoreStateSlice(set, get, generateRandomNickname),
 
-      nickname: generateRandomNickname(),
-      setNickname: (newValue) => {
-        set((prev) => ({
-          nickname: newValue
-        }))
-      },
-      randomNickname: () => {
+      // _hasHydrated: false,
+      // setHasHydrated: (state) => {
+      //   set({
+      //     _hasHydrated: state
+      //   });
+      // },
 
-        const newNickname = generateRandomNickname();
+      // nickname: generateRandomNickname(),
+      // setNickname: (newValue) => {
+      //   set((prev) => ({
+      //     nickname: newValue
+      //   }))
+      // },
+      // randomNickname: () => {
 
-        set((prev) => ({
-          nickname: newNickname
-        }))
-      },
+      //   const newNickname = generateRandomNickname();
+
+      //   set((prev) => ({
+      //     nickname: newNickname
+      //   }))
+      // },
 
       // character: {
       //   model: 'Clownfish',
@@ -62,21 +67,21 @@ export const useStore = create()(
       //   }
       // ],
 
-      darkMode: null,
-      setDarkMode: (newValue) => {
-        set((prev) => ({
-          darkMode: newValue
-        }))
-      },
-      toggleDarkMode: () => set({ darkMode: !get().darkMode }),
+      // darkMode: null,
+      // setDarkMode: (newValue) => {
+      //   set((prev) => ({
+      //     darkMode: newValue
+      //   }))
+      // },
+      // toggleDarkMode: () => set({ darkMode: !get().darkMode }),
 
-      toontownMode: false,
-      setToontownMode: (newValue) => {
-        set((prev) => ({
-          toontownMode: newValue
-        }))
-      },
-      toggleToontownMode: () => set({ toontownMode: !get().toontownMode }),
+      // toontownMode: false,
+      // setToontownMode: (newValue) => {
+      //   set((prev) => ({
+      //     toontownMode: newValue
+      //   }))
+      // },
+      // toggleToontownMode: () => set({ toontownMode: !get().toontownMode }),
 
       updateCamera: null,
       setUpdateCamera: (updateCamera) => set({ updateCamera }),
@@ -84,74 +89,69 @@ export const useStore = create()(
       threeDimensional: true, // 'Light' | 'Dark' | null
       setThreeDimensional: (threeDimensional) => set({ threeDimensional }),
 
-      showMenu: false,
-      setShowMenu: (value) => set({ showMenu: value }),
-      toggleShowMenu: () => set({ showMenu: !get().showMenu }),
+      // showMenu: false,
+      // setShowMenu: (value) => set({ showMenu: value }),
+      // toggleShowMenu: () => set({ showMenu: !get().showMenu }),
 
-      sidebar: true,
-      setSidebar: (value) => set({ sidebar: value }),
-      toggleSidebar: () => set({ sidebar: !get().sidebar }),
+      // sidebar: true,
+      // setSidebar: (value) => set({ sidebar: value }),
+      // toggleSidebar: () => set({ sidebar: !get().sidebar }),
 
-      landingAnimation: true,
-      setLandingAnimation: (value) => set({ landingAnimation: value }),
-      toggleLandingAnimation: () => set({ landingAnimation: !get().landingAnimation }),
+      // landingAnimation: true,
+      // setLandingAnimation: (value) => set({ landingAnimation: value }),
+      // toggleLandingAnimation: () => set({ landingAnimation: !get().landingAnimation }),
 
-      showInfoModal: false,
-      setShowInfoModal: (value) => set({ showInfoModal: value }),
-      toggleInfoModal: () => set({ showInfoModal: !get().showInfoModal }),
+      // showInfoModal: false,
+      // setShowInfoModal: (value) => set({ showInfoModal: value }),
+      // toggleInfoModal: () => set({ showInfoModal: !get().showInfoModal }),
 
       loginInfoModal: false,
       setLoginInfoModal: (value) => set({ loginInfoModal: value }),
       toggleLoginInfoModal: () => set({ loginInfoModal: !get().loginInfoModal }),
 
-      showSettingsModal: false,
-      setShowSettingsModal: (value) => set({ showSettingsModal: value }),
-      toggleSettingsModal: () => set({ showSettingsModal: !get().showSettingsModal }),
+      // showSettingsModal: false,
+      // setShowSettingsModal: (value) => set({ showSettingsModal: value }),
+      // toggleSettingsModal: () => set({ showSettingsModal: !get().showSettingsModal }),
 
-      showCreditsModal: false,
-      setShowCreditsModal: (value) => set({ showCreditsModal: value }),
-      toggleCreditsModal: () => set({ showCreditsModal: !get().showCreditsModal }),
+      // showCreditsModal: false,
+      // setShowCreditsModal: (value) => set({ showCreditsModal: value }),
+      // toggleCreditsModal: () => set({ showCreditsModal: !get().showCreditsModal }),
 
-      showGanmeOverModal: false,
+      showGameOverModal: false,
       setShowGameOverModal: (value) => set({ showGameOverModal: value }),
       toggleGameOverModal: () => set({ showGameOverModal: !get().showGameOverModal }),
 
-      graphicsQuality: "High",
-      setGraphicsQuality: (value) => set({ graphicsQuality: value }),
+      // graphicsQuality: "High",
+      // setGraphicsQuality: (value) => set({ graphicsQuality: value }),
 
-      lobbyDetails: {
-        players: [],
-        games: [],
-      },
-      setLobbyDetails: (lobbyDetails) => set({ lobbyDetails }),
+      // lobbyDetails: {
+      //   players: [],
+      //   games: [],
+      // },
+      // setLobbyDetails: (lobbyDetails) => set({ lobbyDetails }),
 
-      debug: false,
-      setDebug: (newValue) => {
-        set((prev) => ({
-          debug: newValue
-        }))
-      },
+      // debug: false,
+      // setDebug: (newValue) => {
+      //   set((prev) => ({
+      //     debug: newValue
+      //   }))
+      // },
 
-      sceneKey: 0,
-      incSceneKey: () => set((prev) => ({
-        sceneKey: prev.sceneKey + 1
-      })),
+      // sceneKey: 0,
+      // incSceneKey: () => set((prev) => ({
+      //   sceneKey: prev.sceneKey + 1
+      // })),
 
     }),
     {
       name: 'ice-slide-store',
-      version: 1,
-      partialize: (state) => ({
-        nickname: state.nickname,
-        character: state.character,
-        toontownMode: state.toontownMode,
-        darkMode: state.darkMode,
-        graphicsQuality: state.graphicsQuality,
-        landingAnimation: state.landingAnimation,
-        sidebar: state.sidebar,
-        graphicsQuality: state.graphicsQuality,
-        debug: state.debug
-      }),
+      version: 2,
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(([key]) => ![
+            ...typicalZustandStoreExcludes,
+          ].includes(key))
+        ),
       onRehydrateStorage: () => (state) => {
         state.setHasHydrated(true)
       },

@@ -79,9 +79,13 @@ export default function IceSlideGamePage() {
             <GameMenu
                 useStore={useStore}
                 LeftPanelContent={LeftPanelContent}
-                menuBarStyle={"Bar"}
-                menuBarButtonPosition="Left"
-                sidebarStyle={"Static Panel"}
+                menuBarConfig={{
+                    style: "Bar",
+                    menuBarButtonPosition: "Left"
+                }}
+                sidebarConfig={{
+                    style: "Floating Panel",
+                }}
             />
 
             <div className='canvas-wrap'>
