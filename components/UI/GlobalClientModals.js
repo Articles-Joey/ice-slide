@@ -99,8 +99,6 @@ export default function GlobalClientModals() {
                 <CreditsModal
                     show={showCreditsModal}
                     setShow={setShowCreditsModal}
-                    owner="Articles-Joey"
-                    repo="ice-slide"
                 />
             }
         </>

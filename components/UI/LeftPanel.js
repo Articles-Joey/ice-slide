@@ -14,6 +14,7 @@ import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
 import { useStore } from "@/hooks/useStore";
 import { useSearchParams } from "next/navigation";
 import GameDetailsPanel from "./GameDetailsPanel";
+import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
 
 export default function LeftPanelContent(props) {
 
@@ -49,6 +50,15 @@ export default function LeftPanelContent(props) {
 
                 <div className="card-body">
 
+                    <div className="d-flex flex-wrap mb-3">
+
+                        <GameMenuPrimaryButtonGroup
+                            useStore={useStore}
+                            type="GameMenu"
+                        />
+
+                    </div>
+
                     <div className='flex-header'>
                         <div>Server: {server}</div>
                         <div>Players: {0}/4</div>
@@ -77,75 +87,6 @@ export default function LeftPanelContent(props) {
 
                         </div>
                     }
-
-                    <div className="d-flex flex-wrap">
-
-                        <Link
-                            href={'/'}
-                            className="w-50"
-                        >
-                            <ArticlesButton
-                                className='w-100'
-                                small
-                            >
-                                <i className="fad fa-arrow-alt-square-left"></i>
-                                <span>Leave Game</span>
-                            </ArticlesButton>
-                        </Link>
-
-                        <ArticlesButton
-                            small
-                            className="w-50"
-                            active={isFullscreen}
-                            onClick={() => {
-                                if (isFullscreen) {
-                                    exitFullscreen()
-                                } else {
-                                    requestFullscreen()
-                                }
-                            }}
-                        >
-                            {isFullscreen && <span>Exit </span>}
-                            {!isFullscreen && <span><i className='fad fa-expand'></i></span>}
-                            <span>Fullscreen</span>
-                        </ArticlesButton>
-
-                        <div className="d-flex w-50">
-                            <ArticlesButton
-                                className={`w-100`}
-                                small
-                                onClick={() => {
-                                    setShowSettingsModal(true)
-                                }}
-                            >
-                                <i className="fad fa-cog"></i>
-                                Settings
-                            </ArticlesButton>
-                            <ArticlesButton
-                                className={``}
-                                small
-                                onClick={() => {
-                                    toggleDarkMode()
-                                }}
-                            >
-                                <i className="fad fa-moon"></i>
-                                {/* Dark Mode */}
-                            </ArticlesButton>
-                        </div>
-
-                        <ArticlesButton
-                            small
-                            className='w-50'
-                            active={sidebar}
-                            onClick={() => {
-                                toggleSidebar()
-                            }}
-                        >
-                            <i className="fad fa-cog"></i>
-                            <span>Sidebar</span>
-                        </ArticlesButton>
-
-                    </div>
 
                 </div>
             </div>

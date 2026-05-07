@@ -16,8 +16,9 @@ import { useSocketStore } from "@/hooks/useSocketStore";
 import { useStore } from '@/hooks/useStore';
 import { useIceSlideStore } from '@/hooks/useIceSlideStore';
 
-const game_key = 'ice-slide'
-const game_name = 'Ice Slide'
+const game_key = process.env.NEXT_PUBLIC_GAME_KEY
+const game_name = process.env.NEXT_PUBLIC_GAME_NAME
+const game_port = process.env.NEXT_PUBLIC_GAME_PORT
 
 // SocketContextControl
 export default function SocketLogicHandler(props) {

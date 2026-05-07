@@ -5,21 +5,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
-// import { useSelector, useDispatch } from 'react-redux'
-
-// import ROUTES from 'components/constants/routes'
-
 import ArticlesButton from '@/components/UI/Button';
-// import SingleInput from '@/components/Articles/SingleInput';
-import { useLocalStorageNew } from '@/hooks/useLocalStorageNew';
 import IsDev from '@/components/UI/IsDev';
-// import { ChromePicker } from 'react-color';
 import { useSocketStore } from '@/hooks/useSocketStore';
 
-import ViewUserModal from '@articles-media/articles-dev-box/ViewUserModal';
+import { useStore } from '@/hooks/useStore';
+
 import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
 import useUserToken from '@articles-media/articles-dev-box/useUserToken';
-import { useStore } from '@/hooks/useStore';
+import NicknameInput from '@articles-media/articles-dev-box/NicknameInput';
+import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
 
 const LandingBackgroundAnimation = dynamic(() => import('@/components/Game/LandingBackgroundAnimation'), {
     ssr: false,
@@ -45,9 +40,9 @@ const SessionButton = dynamic(() =>
     { ssr: false }
 );
 
-const game_key = 'ice-slide'
-const game_name = 'Ice Slide'
-const game_port = "3023"
+const game_key = process.env.NEXT_PUBLIC_GAME_KEY
+const game_name = process.env.NEXT_PUBLIC_GAME_NAME
+const game_port = process.env.NEXT_PUBLIC_GAME_PORT
 
 export default function IceSlideLobbyPage() {
 
@@ -173,43 +168,10 @@ export default function IceSlideLobbyPage() {
 
                         <div className='card-header d-flex align-items-center'>
 
-                            <div className="flex-grow-1">
+                            <NicknameInput 
+                                useStore={useStore}
+                            />
 
-                                <div className="form-group articles mb-0">
-                                    <label htmlFor="nickname">Nickname</label>
-                                    {/* <SingleInput
-                                        value={nickname}
-                                        setValue={setNickname}
-                                        noMargin
-                                    /> */}
-                                    <div className="d-flex align-items-center">
-                                        <input
-                                            type="text"
-                                            value={_hasHydrated ? nickname : ''}
-                                            disabled={!_hasHydrated}
-                                            id="nickname"
-                                            name="nickname"
-                                            placeholder="Enter your nickname"
-                                            onChange={(e) => {
-                                                setNickname(e.target.value)
-                                            }}
-                                            className={`form-control form-control-sm`}
-                                        />
-                                        <ArticlesButton
-                                            small
-                                            className=""
-                                            onClick={() => {
-                                                randomNickname()
-                                            }}
-                                        >
-                                            <i className="fad fa-random"></i>
-                                        </ArticlesButton>
-                                    </div>
-                                </div>
-
-                                <div className='mt-1' style={{ fontSize: '0.8rem' }}>Visible to all players</div>
-
-                            </div>
                         </div>
 
                         <div className="card-body">
@@ -335,67 +297,10 @@ export default function IceSlideLobbyPage() {
 
                         <div className="card-footer d-flex flex-wrap justify-content-center">
 
-                            <div className='d-flex w-50'>
-                                <ArticlesButton
-                                    className={`w-100`}
-                                    small
-                                    onClick={() => {
-                                        setShowSettingsModal(true)
-                                    }}
-                                >
-                                    <i className="fad fa-cog"></i>
-                                    Settings
-                                </ArticlesButton>
-                                <ArticlesButton
-                                    className={``}
-                                    small
-                                    onClick={() => {
-                                        setDarkMode(!darkMode);
-                                    }}
-                                >
-                                    <i className="fad fa-palette"></i>
-                                </ArticlesButton>
-                            </div>
-
-                            <ArticlesButton
-                                className={`w-50`}
-                                small
-                                onClick={() => {
-                                    setShowInfoModal(true)
-                                }}
-                            >
-                                <i className="fad fa-info-square"></i>
-                                Info
-                            </ArticlesButton>
-
-                            <a
-                                href={'https://github.com/Articles-Joey/ice-slide'}
-                                className='w-50'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                            >
-                                <ArticlesButton
-                                    className={`w-100`}
-                                    small
-                                    onClick={() => {
-
-                                    }}
-                                >
-                                    <i className="fab fa-github"></i>
-                                    GitHub
-                                </ArticlesButton>
-                            </a>
-
-                            <ArticlesButton
-                                className={`w-50`}
-                                small
-                                onClick={() => {
-                                    setShowCreditsModal(true)
-                                }}
-                            >
-                                <i className="fad fa-users"></i>
-                                Credits
-                            </ArticlesButton>
+                            <GameMenuPrimaryButtonGroup 
+                                useStore={useStore}
+                                type="Landing"
+                            />
 
                         </div>
 

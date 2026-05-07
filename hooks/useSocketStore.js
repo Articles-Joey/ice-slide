@@ -17,7 +17,7 @@ export const useSocketStore = create((set) => ({
             reconnectionDelay: 5000,
             reconnectionDelayMax: 10000,
             query: {
-                client: "ice-slide",
+                client: process.env.NEXT_PUBLIC_GAME_KEY,
                 version: "1.0.0",
             }
         });

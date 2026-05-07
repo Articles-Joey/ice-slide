@@ -144,7 +144,7 @@ export const useStore = create()(
 
     }),
     {
-      name: 'ice-slide-store',
+      name: `${process.env.NEXT_PUBLIC_GAME_KEY}-store`,
       version: 2,
       partialize: (state) =>
         Object.fromEntries(
