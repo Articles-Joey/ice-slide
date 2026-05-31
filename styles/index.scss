@@ -18,6 +18,9 @@ body,
     --bs-body-bg: #013d67 !important;
     --bs-body-bg-rgb: rgb(1, 61, 103) !important;
     --bs-body-color: #fff !important;
+    --bs-dropdown-color: var(--bs-body-bg) !important;
+    --bs-dropdown-bg: var(--bs-body-bg) !important;
+    --bs-secondary-color: #fff !important;
 }
 
 .btn-articles,

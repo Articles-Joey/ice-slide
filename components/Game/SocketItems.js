@@ -3,13 +3,12 @@ import { useSocketStore } from "@/hooks/useSocketStore"
 import { useSearchParams } from "next/navigation"
 import Barrel from "./Barrel"
 import Star from "./Star"
+import { useGameStore } from "@/hooks/useGameStore"
 
 export default function SocketItems() {
 
-    const items = useIceSlideStore(state => state.items)
+    const items = useGameStore(state => state.gameState.items)
     // const socket = useSocketStore(state => state.socket)
-
-    
 
     return (
         <group>

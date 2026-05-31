@@ -7,7 +7,7 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
 export default function LandingBackgroundAnimation() {
     return (
         <GameCanvas
-            landingAnimation={true}
+            landingAnimationMode={true}
         />
     )
 }

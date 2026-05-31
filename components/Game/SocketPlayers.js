@@ -2,10 +2,11 @@ import { useIceSlideStore } from "@/hooks/useIceSlideStore"
 import { useSocketStore } from "@/hooks/useSocketStore"
 import { useSearchParams } from "next/navigation"
 import DummyPlayer from "./DummyPlayer"
+import { useGameStore } from "@/hooks/useGameStore"
 
 export default function SocketPlayers() {
 
-    const players = useIceSlideStore(state => state.players)
+    const players = useGameStore(state => state.gameState.players)
     const socket = useSocketStore(state => state.socket)
 
     const searchParams = useSearchParams()

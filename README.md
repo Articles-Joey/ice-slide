@@ -6,7 +6,9 @@ Get your tire as close to the target as possible. Watch out for other players an
 
 ## Getting Started
 
-First, run the development server:
+First you will need to setup a .env file from the .env.sample provided.
+
+Then development server can be run:
 
 ```bash
 npm run dev
@@ -15,6 +17,10 @@ npm run dev
 ## Multiplayer
 
 Multiplayer via WebSockets. Websocket backend code is not in this repo or available at this time.
+
+## Scripts
+
+In the scripts folder is reset_public and sync_to_s3. This is only for Articles Media usage. Allows for putting public folder to CloudFront to lower Vercel charges for the public facing site.
 
 ## Inspiration
 

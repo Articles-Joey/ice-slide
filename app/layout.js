@@ -14,20 +14,9 @@ import "@articles-media/articles-dev-box/dist/style.css";
 
 import "@articles-media/articles-gamepad-helper/dist/articles-gamepad-helper.css";
 
-import SocketLogicHandler from "@/components/SocketLogicHandler";
+import SocketLogicHandler from "@/components/Handlers/SocketLogicHandler";
 import LayoutClient from './layoutClient';
-import GlobalClientModals from '@/components/UI/GlobalClientModals';
 import { Suspense } from 'react';
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 export const metadata = {
   title: "Ice Slide",
@@ -40,22 +29,16 @@ export default function RootLayout({ children }) {
 
       <head>
 
-        {/* <link
-          rel="stylesheet"
-          href={`${process.env.NEXT_PUBLIC_CDN}fonts/fontawsome/css/all.min.css`}
-        /> */}
-
       </head>
 
       <body
       // className={`${geistSans.variable} ${geistMono.variable}`}
       >
-
-        <SocketLogicHandler />
+        
         <LayoutClient />
 
         <Suspense>
-          <GlobalClientModals />
+          <SocketLogicHandler />
         </Suspense>
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>

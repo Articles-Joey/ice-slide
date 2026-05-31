@@ -13,7 +13,7 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
     const launchPlayers = useIceSlideStore(state => state.launchPlayers)
 
     const puckRef = useRef()
-    const launched = useRef(false)
+    const lastProcessedLaunch = useRef(0)
     const positionRef = useRef(position)
 
     const toontownMode = useStore(state => state.toontownMode);
@@ -32,24 +32,18 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
 
     useEffect(() => {
 
-        console.log("Player detected launchPlayers change")
-
-        if (launchPlayers && !launched.current) {
+        if (launchPlayers && launchPlayers > lastProcessedLaunch.current) {
 
             console.log("Launching player with hitPower:", hitPower, "and hitRotation:", hitRotation)
 
-            launched.current = true;
+            lastProcessedLaunch.current = launchPlayers;
             const angle = (hitRotation * Math.PI) / 180;
             const vx = Math.sin(angle) * hitPower;
             const vz = Math.cos(angle) * hitPower;
             api.velocity.set(vx, 0, vz);
         }
 
-        if (!launchPlayers) {
-            launched.current = false;
-        }
-
-    }, [launchPlayers])
+    }, [launchPlayers, hitPower, hitRotation])
 
     useEffect(() => {
         if (!socketId) return;
@@ -64,26 +58,22 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
         return () => clearInterval(interval);
     }, [socketId, server]);
 
-    useFrame(() => {
-
-        if (puckRef.current) {
-            // Get the current position of the cylinder from the physics API
-            api.position.subscribe((position) => {
-
-                positionRef.current = position;
+    useEffect(() => {
+        const unsubscribe = api.position.subscribe((position) => {
+            positionRef.current = position;
+            if (puckRef.current) {
                 puckRef.current.position.set(...position);
+            }
 
-                if (position[1] < -10) {
-                    console.log("Y position below 0. Stopping physics.");
-                    api.mass.set(0); // Set mass to 0 to deactivate physics
-                    api.velocity.set(0, 0, 0); // Stop all motion
-                    api.angularVelocity.set(0, 0, 0); // Stop rotation
-                }
-
-            });
-        }
-
-    })
+            if (position[1] < -10) {
+                console.log("Y position below -10. Stopping physics.");
+                api.mass.set(0); // Set mass to 0 to deactivate physics
+                api.velocity.set(0, 0, 0); // Stop all motion
+                api.angularVelocity.set(0, 0, 0); // Stop rotation
+            }
+        });
+        return () => unsubscribe();
+    }, [api]);
 
     return (
         <group>

@@ -10,11 +10,21 @@ import ViewUserModal from "@/components/UI/ViewUserModal"
 import IsDev from "@/components/UI/IsDev";
 import ArticlesButton from "./Button";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useGameStore } from "@/hooks/useGameStore";
+import { useSocketStore } from "@/hooks/useSocketStore";
 
 export default function GameOverModal({
     show,
     setShow,
 }) {
+
+    const socket = useSocketStore(state => state.socket)
+    const setGameState = useGameStore(state => state.setGameState)
+
+    const searchParams = useSearchParams()
+    const params = Object.fromEntries(searchParams.entries());
+    const { server, local_play } = params
 
     const [showModal, setShowModal] = useState(true)
 
@@ -66,9 +76,38 @@ export default function GameOverModal({
                         </ArticlesButton>
                     </Link>
 
-                    <ArticlesButton variant="outline-dark" onClick={() => {
-                        setShow(false)
-                    }}>
+                    <ArticlesButton
+                        variant="outline-dark"
+                        onClick={() => {
+
+                            if (server) {
+                                socket.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`, {
+                                    server_id: server,
+                                    status: "In Lobby"
+                                })
+                            }
+
+                            if (local_play === "true") {
+                                setGameState({
+                                    ...useGameStore.getState().gameState,
+                                    status: "In Lobby",
+                                    timer: 0,
+                                    positions: Array.from({ length: 23 }, (player_obj, player_i) => {
+                                        return {
+                                            player_index: player_i,
+                                            x: 0,
+                                            y: (player_i * 3),
+                                            newX: generateRandomInteger(
+                                                5,
+                                                10
+                                            ),
+                                        };
+                                    })
+                                })
+                            }
+
+                        }}
+                    >
                         Play Again
                     </ArticlesButton>
 

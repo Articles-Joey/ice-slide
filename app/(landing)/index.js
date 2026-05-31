@@ -1,340 +1,117 @@
 "use client"
-import { useEffect, useContext, useState } from 'react';
-
-import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 
-import ArticlesButton from '@/components/UI/Button';
-import IsDev from '@/components/UI/IsDev';
 import { useSocketStore } from '@/hooks/useSocketStore';
-
 import { useStore } from '@/hooks/useStore';
 
-import useUserDetails from '@articles-media/articles-dev-box/useUserDetails';
-import useUserToken from '@articles-media/articles-dev-box/useUserToken';
-import NicknameInput from '@articles-media/articles-dev-box/NicknameInput';
-import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
+import PageTemplateLandingPage from '@articles-media/articles-dev-box/PageTemplateLandingPage';
+import RotatingMascot from '@/components/UI/RotatingMascot';
 
 const LandingBackgroundAnimation = dynamic(() => import('@/components/Game/LandingBackgroundAnimation'), {
     ssr: false,
     loading: () => <p>Loading...</p>
 });
 
-const GameScoreboard = dynamic(() =>
-    import('@articles-media/articles-dev-box/GameScoreboard'),
-    { ssr: false }
-);
-const Ad = dynamic(() =>
-    import('@articles-media/articles-dev-box/Ad'),
-    { ssr: false }
-);
-
-const ReturnToLauncherButton = dynamic(() =>
-    import('@articles-media/articles-dev-box/ReturnToLauncherButton'),
-    { ssr: false }
-);
-
-const SessionButton = dynamic(() =>
-    import('@articles-media/articles-dev-box/SessionButton'),
-    { ssr: false }
-);
-
-const game_key = process.env.NEXT_PUBLIC_GAME_KEY
-const game_name = process.env.NEXT_PUBLIC_GAME_NAME
-const game_port = process.env.NEXT_PUBLIC_GAME_PORT
-
 export default function IceSlideLobbyPage() {
 
-    const {
-        socket,
-        connected
-    } = useSocketStore(state => ({
-        socket: state.socket,
-        connected: state.connected
-    }));
-
-    const {
-        data: userToken,
-        error: userTokenError,
-        isLoading: userTokenLoading,
-        mutate: userTokenMutate
-    } = useUserToken(
-        game_port
-    );
-
-    const {
-        data: userDetails,
-        error: userDetailsError,
-        isLoading: userDetailsLoading,
-        mutate: userDetailsMutate
-    } = useUserDetails({
-        token: userToken
-    });
-
-    const nickname = useStore((state) => state.nickname);
-    const setNickname = useStore((state) => state.setNickname);
-    const randomNickname = useStore((state) => state.randomNickname);
     const toontownMode = useStore((state) => state.toontownMode);
 
-    const _hasHydrated = useStore((state) => state._hasHydrated);
-
-    const landingAnimation = useStore((state) => state.landingAnimation);
-
-    const setShowCreditsModal = useStore((state) => state.setShowCreditsModal);
-    const setShowInfoModal = useStore((state) => state.setShowInfoModal);
-    const setShowSettingsModal = useStore((state) => state.setShowSettingsModal);
-
-    const darkMode = useStore((state) => state.darkMode);
-    const toggleDarkMode = useStore((state) => state.toggleDarkMode);
-    const setDarkMode = useStore((state) => state.setDarkMode);
-
-    const lobbyDetails = useStore((state) => state.lobbyDetails);
-
-    useEffect(() => {
-
-        if (connected) {
-            socket.emit('join-room', `game:${game_key}-landing`);
-        }
-
-        return function cleanup() {
-            socket?.emit('leave-room', `game:${game_key}-landing`);
-        };
-
-    }, [connected]);
-
     return (
-
-        <div className="ice-slide-landing-page">
-
-            <div className='background-wrap'>
-                <Image
-                    src={`${process.env.NEXT_PUBLIC_CDN}games/Ice Slide/ice-slide-background.jpg`}
-                    alt=""
-                    fill
-                    style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(10px)' }}
-                />
-            </div>
-
-            <div className="container d-flex flex-column-reverse flex-lg-row justify-content-center align-items-center py-3">
-
-                <div style={{ "width": "20rem" }}>
-
+        <>
+            <PageTemplateLandingPage
+                useSocketStore={useSocketStore}
+                useStore={useStore}
+                RotatingMascot={RotatingMascot}
+                Link={Link}
+                // logoImage={logo.src}
+                LandingBackgroundAnimation={
+                    <LandingBackgroundAnimation />
+                }
+                // CardBodyOverride={<>
+                // </>}
+                heroOverride={<>
                     <div className='position-relative'>
-                        {toontownMode &&
+                            {toontownMode &&
+                                <img
+                                    width={'100%'}
+                                    src={"img/toontown-icon.webp"}
+                                    alt="Logo"
+                                    style={{
+                                        position: 'absolute',
+                                        // position: 'relative',
+                                        zIndex: 2,
+                                        bottom: 0,
+                                        // top: -75,
+                                        left: "50%",
+                                        transform: 'translateX(-50%)',
+                                        objectFit: 'contain',
+                                        width: '100px',
+                                        // margin: "0 auto"
+                                    }}
+                                ></img>
+                            }
                             <img
                                 width={'100%'}
-                                src={"img/toontown-icon.webp"}
+                                src={"img/logo.png"}
                                 alt="Logo"
                                 style={{
-                                    position: 'absolute',
-                                    // position: 'relative',
-                                    zIndex: 2,
-                                    bottom: 0,
-                                    // top: -75,
-                                    left: "50%",
-                                    transform: 'translateX(-50%)',
-                                    objectFit: 'contain',
-                                    width: '100px',
-                                    // margin: "0 auto"
+                                    position: 'relative',
+                                    zIndex: 1,
+                                    margin: "0 auto"
                                 }}
                             ></img>
+                        </div>
+                </>}
+                // disableHero                
+                backgroundImage={`${process.env.NEXT_PUBLIC_CDN}games/Ice Slide/ice-slide-background.jpg`}
+                CardBodyPrependContent={<>
+                    {/* <div className='mb-2 border-bottom pb-2'>
+                        <Link href={"/play?local_play=true"} className="w-100">
+                            <ArticlesButton
+                                className="w-100"
+                            >
+                                <i className='fas fa-gamepad-alt fa-lg me-2'></i>
+                                Local Play
+                                <span className='ms-2 badge bg-dark' style={{ scale: '1.1' }}>Works offline!</span>
+                            </ArticlesButton>
+                        </Link>
+                        <div className='small text-center'>Play with 2 to 4 gamepads locally.</div>
+                        <ConnectedControllersPreview />
+                    </div> */}
+                </>}
+                // singlePlayerConfig={{
+
+                // }}
+                NicknameInputConfig={{
+                    // PreComponent: <div className='flex-shrink-0 me-2'></div>
+                }}
+                multiplayerConfig={{
+                    type: "WebSocket",
+                    // comingSoon: true,
+                    defaultServers: 2,
+                    // privateServerSupport: false,
+                    onlinePlayersTemplate: "2.0"
+                }}
+                gameScoreboardConfig={{
+                    append_score_text: "m",
+                    metrics: [
+                        {
+                            label: 'Players Hit',
+                            key: "score",
+                            format: (value) => `${value} m`
+                        },
+                        {
+                            label: 'Games Won',
+                            key: "games_won",
+                            format: (value) => `${value} m`
                         }
-                        <img
-                            width={'100%'}
-                            src={"img/logo.png"}
-                            alt="Logo"
-                            style={{
-                                position: 'relative',
-                                zIndex: 1,
-                                margin: "0 auto"
-                            }}
-                        ></img>
-                    </div>
-
-                    <div
-                        className="card card-articles card-sm mb-3"
-
-                    >
-
-                        {/* <div style={{ position: 'relative', height: '200px' }}>
-                            <Image
-                                src={Logo}
-                                alt=""
-                                fill
-                                style={{ objectFit: 'cover' }}
-                            />
-                        </div> */}
-
-                        <div className='card-header d-flex align-items-center'>
-
-                            <NicknameInput 
-                                useStore={useStore}
-                            />
-
-                        </div>
-
-                        <div className="card-body">
-
-                            <div className="fw-bold mb-1 small text-center">
-                                {lobbyDetails.players.length || 0} player{lobbyDetails.players.length > 1 && 's'} in the lobby.
-                            </div>
-
-                            {/* <div className='small fw-bold'>Public Servers</div> */}
-
-                            <div className="servers">
-
-                                {[
-                                    ...Array.from({ length: 2 }, (_, i) => i + 1)
-                                    // 1, 
-                                    // 2, 
-                                    // 3, 
-                                    // 4
-                                ].map(id => {
-
-                                    let lobbyLookup = lobbyDetails?.globalGameState?.games?.find(lobby =>
-                                        parseInt(lobby.server_id) == id
-                                    )
-
-                                    return (
-                                        <div key={id} className="server">
-
-                                            <div className='d-flex justify-content-between align-items-center w-100 mb-2'>
-                                                <div className="mb-0" style={{ fontSize: '0.9rem' }}><b>Server {id}</b></div>
-                                                <div className='mb-0'>{lobbyLookup?.players?.length || 0}/4</div>
-                                            </div>
-
-                                            <div className='d-flex justify-content-around w-100 mb-1'>
-                                                {[1, 2, 3, 4].map(player_count => {
-
-                                                    let playerLookup = false
-
-                                                    if (lobbyLookup?.players?.length >= player_count) playerLookup = true
-
-                                                    return (
-                                                        <div key={player_count} className="icon" style={{
-                                                            width: '20px',
-                                                            height: '20px',
-                                                            ...(playerLookup ? {
-                                                                backgroundColor: 'black',
-                                                            } : {
-                                                                backgroundColor: 'gray',
-                                                            }),
-                                                            border: '1px solid black'
-                                                        }}>
-
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
-
-                                            <Link
-                                                className={``}
-                                                href={{
-                                                    pathname: `/play`,
-                                                    query: {
-                                                        server: id
-                                                    }
-                                                }}
-                                            >
-                                                <ArticlesButton
-                                                    className="px-5"
-                                                    small
-                                                    disabled={!connected}
-                                                >
-                                                    Join
-                                                </ArticlesButton>
-                                            </Link>
-
-                                        </div>
-                                    )
-                                })}
-
-                            </div>
-
-                            {/* <div className='small fw-bold  mt-3 mb-1'>Or</div> */}
-
-                            {/* <div className='d-flex'>
-    
-                                <ArticlesButton
-                                    className={`w-50`}
-                                    onClick={() => {
-                                        // TODO
-                                        alert("Coming Soon!")
-                                    }}
-                                >
-                                    <i className="fad fa-robot"></i>
-                                    Practice
-                                </ArticlesButton>
-    
-                                <ArticlesButton
-                                    className={`w-50`}
-                                    onClick={() => {
-                                        setShowPrivateGameModal(prev => !prev)
-                                    }}
-                                >
-                                    <i className="fad fa-lock"></i>
-                                    Private Game
-                                </ArticlesButton>
-    
-                            </div> */}
-
-                            <IsDev className={'mt-3'}>
-                                <div>
-                                    <ArticlesButton
-                                        className="w-50"
-                                        variant='warning'
-                                        onClick={() => {
-                                            socket.emit('game:four-frogs:reset', '');
-                                        }}
-                                    >
-                                        Reset Server
-                                    </ArticlesButton>
-                                </div>
-                            </IsDev>
-
-                        </div>
-
-                        <div className="card-footer d-flex flex-wrap justify-content-center">
-
-                            <GameMenuPrimaryButtonGroup 
-                                useStore={useStore}
-                                type="Landing"
-                            />
-
-                        </div>
-
-                    </div>
-
-                    {/* <div>This: {userDetails}</div> */}
-
-                    <SessionButton
-                        port={game_port}
-                        friendsButton={true}
-                    />
-
-                    <ReturnToLauncherButton />
-
-                </div>
-
-                <GameScoreboard
-                    game={game_name}
-                    style="Default"
-                    darkMode={darkMode ? true : false}
-                />
-
-                <Ad
-                    style="Default"
-                    section={"Games"}
-                    section_id={game_name}
-                    darkMode={darkMode ? true : false}
-                    user_ad_token={userToken}
-                    userDetails={userDetails}
-                    userDetailsLoading={userDetailsLoading}
-                />
-
-            </div>
-
-        </div>
+                    ]
+                }}
+                // brandingTextClass="jaro-primary"
+                disableGameScoreboard={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== 'true'}
+                disableAd={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== 'true'}
+            />
+        </>
     );
 }

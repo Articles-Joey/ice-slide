@@ -1,8 +1,9 @@
+import { useGameStore } from "@/hooks/useGameStore"
 import { useIceSlideStore } from "@/hooks/useIceSlideStore"
 
 export default function GameDetailsPanel() {
 
-    const players = useIceSlideStore(state => state.players)
+    const players = useGameStore(state => state.gameState.players)
 
     return (
         <div className="card game-details-panel">
@@ -15,7 +16,7 @@ export default function GameDetailsPanel() {
 
                 <div>Players</div>
 
-                {players.map((player, index) => (
+                {players?.map((player, index) => (
                     <div key={index} className="player-entry border p-2">
 
                         {/* <div className="player-color" style={{ backgroundColor: player.color }}></div> */}
@@ -64,12 +65,18 @@ export default function GameDetailsPanel() {
 
 function RoundAndTimer() {
 
-    const gameState = useIceSlideStore(state => state.gameState)
+    const gameState = useGameStore(state => state.gameState)
 
     return (
-        <div className="d-flex align-items-center w-100 justify-content-between">
-            <div>Round: {gameState?.round || 0}</div>
-            <div>Time: {gameState?.timer || 0}</div>
+        <div className="w-100">
+
+            <div className="d-flex align-items-center w-100 justify-content-between">
+                <div>Round: {gameState?.round + 1 || 0}</div>
+                <div>Time: {gameState?.timer || 0}</div>
+            </div>
+
+            <div className="small">Status: {gameState?.status || 0}</div>
+
         </div>
     )
 }

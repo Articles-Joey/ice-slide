@@ -14,10 +14,10 @@ import FlatRing from "./FlatRing";
 import Ground from "./Ground";
 import Rocks from "./Rocks";
 import Walls from "./Walls";
-import PlayerProjectile from "./PlayerProjectile";
-import DummyPlayer from "./DummyPlayer";
-import Barrel from "./Barrel";
-import Star from "./Star";
+// import PlayerProjectile from "./PlayerProjectile";
+// import DummyPlayer from "./DummyPlayer";
+// import Barrel from "./Barrel";
+// import Star from "./Star";
 import LogoCube from "./LogoCube";
 import { useStore } from "@/hooks/useStore";
 import { ModelBear } from "../Models/Bear";
@@ -34,7 +34,9 @@ import SocketItems from "./SocketItems";
 import { ModelDonaldsBoat } from "../Models/DonaldsBoat";
 import { ModelDonaldDuck } from "../Models/DonaldDuck";
 
-function GameCanvas(props) {
+function GameCanvas({
+    landingAnimationMode = false,
+}) {
 
     const debug = useStore(state => state.debug);
     const darkMode = useStore(state => state.darkMode)
@@ -83,7 +85,7 @@ function GameCanvas(props) {
 
             <LogoCube />
 
-            <ControlsHandler />
+            {!landingAnimationMode && <ControlsHandler />}
 
             <FlatRing
                 args={[3, 5, 32]}

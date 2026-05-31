@@ -15,6 +15,7 @@ import GameOverModal from '@/components/UI/GameOverModal';
 
 import GameMenu from '@articles-media/articles-dev-box/GameMenu';
 import classNames from 'classnames';
+import { useGameStore } from '@/hooks/useGameStore';
 
 const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
     ssr: false,
@@ -43,7 +44,8 @@ export default function IceSlideGamePage() {
     const sceneKey = useStore(state => state.sceneKey)
     const showMenu = useStore(state => state.showMenu);
 
-    const showGameOverModal = useStore(state => state.showGameOverModal)
+    // const showGameOverModal = useStore(state => state.showGameOverModal)
+    const status = useGameStore(state => state.gameState.status)
 
     useEffect(() => {
 
@@ -79,9 +81,9 @@ export default function IceSlideGamePage() {
             id={`${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`}
         >
 
-            {showGameOverModal &&
+            {status === 'Game Over' &&
                 <GameOverModal
-                    show={showGameOverModal}
+                    show={true}
                     setShow={useStore.getState().setShowGameOverModal}
                 />
             }

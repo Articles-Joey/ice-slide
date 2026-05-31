@@ -1,5 +1,6 @@
 {
   "name": "ice-slide",
+  "description": "Get your tire as close to the target as possible. Watch out for other players and obstacles. Collect the barrels to earn bonus points!",
   "homepage": "https://ice-slide.articles.media",
   "version": "0.9.0",
   "private": false,
@@ -10,7 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@articles-media/articles-dev-box": "^1.0.42",
+    "@articles-media/articles-dev-box": "^1.4.0",
     "@articles-media/articles-gamepad-helper": "^0.0.13",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
