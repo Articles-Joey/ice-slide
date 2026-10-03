@@ -1,89 +1,46 @@
-import Link from "next/link";
+"use client";
 
-import ArticlesButton from "@/components/UI/Button";
-
-import { useSocketStore } from "@/hooks/useSocketStore";
-import { useIceSlideStore } from "@/hooks/useIceSlideStore";
-import useFullscreen from '@articles-media/articles-dev-box/useFullscreen';
-import { useStore } from "@/hooks/useStore";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import { useRouter, useSearchParams } from "next/navigation";
+import GameMenuPrimaryButtonGroup from "@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup";
+import { useSocketStore } from "@/hooks/useSocketStore";
+import { useStore } from "@/hooks/useStore";
+import ArticlesButton from "./Button";
 import GameDetailsPanel from "./GameDetailsPanel";
-import GameMenuPrimaryButtonGroup from '@articles-media/articles-dev-box/GameMenuPrimaryButtonGroup';
 import DebugPanel from "./DebugPanel";
 
-export default function LeftPanelContent(props) {
-
-    const searchParams = useSearchParams()
-    const params = Object.fromEntries(searchParams.entries());
-    const { server } = params
-
-    const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
-
-    const debug = useStore(state => state.debug);
-
-    const {
-        socket,
-    } = useSocketStore(state => ({
-        socket: state.socket,
-    }));
+export default function LeftPanelContent() {
+    const server = useSearchParams().get("server");
+    const debug = useStore((state) => state.debug);
+    const socket = useSocketStore((state) => state.socket);
 
     return (
-        <div className='w-100'>
-
-            <div className="card card-articles card-sm">
-
-                <div className="card-body">
-
-                    <div className="d-flex flex-wrap mb-3">
-
-                        <GameMenuPrimaryButtonGroup
-                            useStore={useStore}
-                            type="GameMenu"
-                            useRouter={useRouter}
-                        />
-
-                    </div>
-
-                    <div className='flex-header'>
-                        <div>Server: {server}</div>
-                        <div>Players: {0}/4</div>
-                    </div>
-
-                    {!socket?.connected &&
-                        <div
-                            className="mb-3"
-                        >
-
-                            <div className="">
-
-                                <div className="h6 mb-1">Not connected</div>
-
-                                <ArticlesButton
-                                    onClick={() => {
-                                        console.log("Reconnect")
-                                        socket.connect()
-                                    }}
-                                    className="w-100"
-                                >
-                                    Reconnect!
-                                </ArticlesButton>
-
-                            </div>
-
-                        </div>
-                    }
-
-                </div>
-            </div>
-
+        <Box sx={{ width: "100%" }}>
+            <Card sx={{ bgcolor: "game.card", backgroundImage: "none", fontSize: "0.875rem", border: 1, borderColor: "divider" }}>
+                <CardContent sx={{ p: 1, "&:last-child": { pb: 1 } }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", mb: 2 }}>
+                        <GameMenuPrimaryButtonGroup useStore={useStore} type="GameMenu" useRouter={useRouter} />
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Box>Server: {server}</Box>
+                        <Box>Players: {0}/4</Box>
+                    </Box>
+                    {!socket?.connected && (
+                        <Box sx={{ mb: 2 }}>
+                            <Typography variant="subtitle1" sx={{ mb: 0.5 }}>Not connected</Typography>
+                            <ArticlesButton sx={{ width: "100%" }} onClick={() => socket?.connect()}>
+                                Reconnect!
+                            </ArticlesButton>
+                        </Box>
+                    )}
+                </CardContent>
+            </Card>
             <GameDetailsPanel />
-
-            {/* Debug Controls */}
-            {debug &&
-                <DebugPanel />
-            }
-
-        </div>
-    )
-
+            {debug && <DebugPanel />}
+        </Box>
+    );
 }
+

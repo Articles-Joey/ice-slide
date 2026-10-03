@@ -1,117 +1,90 @@
-"use client"
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
+"use client";
 
-import { useSocketStore } from '@/hooks/useSocketStore';
-import { useStore } from '@/hooks/useStore';
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import Box from "@mui/material/Box";
+import PageTemplateLandingPage from "@articles-media/articles-dev-box/PageTemplateLandingPage";
+import { useSocketStore } from "@/hooks/useSocketStore";
+import { useStore } from "@/hooks/useStore";
+import RotatingMascot from "@/components/UI/RotatingMascot";
 
-import PageTemplateLandingPage from '@articles-media/articles-dev-box/PageTemplateLandingPage';
-import RotatingMascot from '@/components/UI/RotatingMascot';
-
-const LandingBackgroundAnimation = dynamic(() => import('@/components/Game/LandingBackgroundAnimation'), {
-    ssr: false,
-    loading: () => <p>Loading...</p>
-});
+const LandingBackgroundAnimation = dynamic(
+    () => import("@/components/Game/LandingBackgroundAnimation"),
+    { ssr: false, loading: () => <p>Loading...</p> },
+);
 
 export default function IceSlideLobbyPage() {
-
     const toontownMode = useStore((state) => state.toontownMode);
+    const darkMode = useStore((state) => state.darkMode);
 
     return (
-        <>
+        <Box sx={{
+            position: "relative",
+            isolation: "isolate",
+            "& .landing-page": {
+                flexGrow: 1, display: "flex", justifyContent: "center",
+                alignItems: "center", minHeight: "100vh",
+            },
+            "& .servers": {
+                display: "grid", gap: "5px", gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            },
+            "& .server": {
+                p: "0.5rem", border: "1px solid rgba(0,0,0,0.25)",
+                display: "flex", flexDirection: "column", alignItems: "center",
+            },
+            "& .ad-wrap": {
+                mt: "1rem",
+                "@media (min-width: 992px)": {
+                    mt: 0, display: "block", position: "absolute",
+                    right: "1rem", top: "50%", transform: "translateY(-50%)",
+                },
+            },
+            "& .background-wrap": {
+                position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: -1,
+                "& img": { filter: "blur(2px)", opacity: darkMode === false ? 1 : 0.25 },
+            },
+            "& .card, & .MuiCard-root, & .ad-wrap": {
+                boxShadow: darkMode === false ? undefined : "0px 0px 34px -10px #a7eefc",
+            },
+        }}>
             <PageTemplateLandingPage
                 useSocketStore={useSocketStore}
                 useStore={useStore}
                 RotatingMascot={RotatingMascot}
                 Link={Link}
-                // logoImage={logo.src}
-                LandingBackgroundAnimation={
-                    <LandingBackgroundAnimation />
-                }
-                // CardBodyOverride={<>
-                // </>}
-                heroOverride={<>
-                    <div className='position-relative'>
-                            {toontownMode &&
-                                <img
-                                    width={'100%'}
-                                    src={"img/toontown-icon.webp"}
-                                    alt="Logo"
-                                    style={{
-                                        position: 'absolute',
-                                        // position: 'relative',
-                                        zIndex: 2,
-                                        bottom: 0,
-                                        // top: -75,
-                                        left: "50%",
-                                        transform: 'translateX(-50%)',
-                                        objectFit: 'contain',
-                                        width: '100px',
-                                        // margin: "0 auto"
-                                    }}
-                                ></img>
-                            }
-                            <img
-                                width={'100%'}
-                                src={"img/logo.png"}
-                                alt="Logo"
-                                style={{
-                                    position: 'relative',
-                                    zIndex: 1,
-                                    margin: "0 auto"
+                useRouter={useRouter}
+                LandingBackgroundAnimation={<LandingBackgroundAnimation />}
+                heroOverride={
+                    <Box sx={{ position: "relative" }}>
+                        {toontownMode && (
+                            <Box component="img" src="/img/toontown-icon.webp" alt="Toontown"
+                                sx={{
+                                    position: "absolute", zIndex: 2, bottom: 0, left: "50%",
+                                    transform: "translateX(-50%)", objectFit: "contain", width: "100px",
                                 }}
-                            ></img>
-                        </div>
-                </>}
-                // disableHero                
+                            />
+                        )}
+                        <Box component="img" src="/img/logo.png" alt="Ice Slide"
+                            sx={{ width: "100%", position: "relative", zIndex: 1, m: "0 auto" }}
+                        />
+                    </Box>
+                }
                 backgroundImage={`${process.env.NEXT_PUBLIC_CDN}games/Ice Slide/ice-slide-background.jpg`}
-                CardBodyPrependContent={<>
-                    {/* <div className='mb-2 border-bottom pb-2'>
-                        <Link href={"/play?local_play=true"} className="w-100">
-                            <ArticlesButton
-                                className="w-100"
-                            >
-                                <i className='fas fa-gamepad-alt fa-lg me-2'></i>
-                                Local Play
-                                <span className='ms-2 badge bg-dark' style={{ scale: '1.1' }}>Works offline!</span>
-                            </ArticlesButton>
-                        </Link>
-                        <div className='small text-center'>Play with 2 to 4 gamepads locally.</div>
-                        <ConnectedControllersPreview />
-                    </div> */}
-                </>}
-                // singlePlayerConfig={{
-
-                // }}
-                NicknameInputConfig={{
-                    // PreComponent: <div className='flex-shrink-0 me-2'></div>
-                }}
                 multiplayerConfig={{
-                    type: "WebSocket",
-                    // comingSoon: true,
-                    defaultServers: 2,
-                    // privateServerSupport: false,
-                    onlinePlayersTemplate: "2.0"
+                    type: "WebSocket", defaultServers: 2, onlinePlayersTemplate: "2.0",
                 }}
                 gameScoreboardConfig={{
                     append_score_text: "m",
                     metrics: [
-                        {
-                            label: 'Players Hit',
-                            key: "score",
-                            format: (value) => `${value} m`
-                        },
-                        {
-                            label: 'Games Won',
-                            key: "games_won",
-                            format: (value) => `${value} m`
-                        }
-                    ]
+                        { label: "Players Hit", key: "score", format: (value) => `${value} m` },
+                        { label: "Games Won", key: "games_won", format: (value) => `${value} m` },
+                    ],
                 }}
-                // brandingTextClass="jaro-primary"
-                disableGameScoreboard={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== 'true'}
-                disableAd={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== 'true'}
+                disableGameScoreboard={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== "true"}
+                disableAd={process.env.NEXT_PUBLIC_ENABLE_ARTICLES !== "true"}
             />
-        </>
+        </Box>
     );
 }
+

@@ -1,7 +1,8 @@
 "use client"
 import { useEffect } from 'react';
+import Box from '@mui/material/Box';
 
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import dynamic from 'next/dynamic'
 
@@ -22,19 +23,11 @@ const GameCanvas = dynamic(() => import('@/components/Game/GameCanvas'), {
 });
 
 const game_key = process.env.NEXT_PUBLIC_GAME_KEY
-const game_name = process.env.NEXT_PUBLIC_GAME_NAME
-const game_port = process.env.NEXT_PUBLIC_GAME_PORT
 
 export default function IceSlideGamePage() {
 
-    const {
-        socket
-    } = useSocketStore(state => ({
-        socket: state.socket
-    }));
+    const socket = useSocketStore(state => state.socket);
 
-    // const router = useRouter()
-    // const pathname = usePathname()
     const searchParams = useSearchParams()
     const params = Object.fromEntries(searchParams.entries());
     const { server } = params
@@ -65,16 +58,17 @@ export default function IceSlideGamePage() {
 
     }, [server, socket.connected, nickname]);
 
-    const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen();
+    const { isFullscreen } = useFullscreen();
 
     return (
 
-        <div
+        <Box
+            sx={{ position: 'relative', display: 'flex' }}
             className={classNames(
                 `${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`,
                 {
                     'menu-open': showMenu,
-                    'fullscreen': useFullscreen().isFullscreen,
+                    'fullscreen': isFullscreen,
                     'show-sidebar': sidebar,
                 }
             )}
@@ -100,7 +94,10 @@ export default function IceSlideGamePage() {
                 }}
             />
 
-            <div className='canvas-wrap'>
+            <Box className='canvas-wrap' sx={{
+                position: 'relative', width: '100vw', height: '100vh',
+                '& canvas': { position: 'absolute', width: '100%', height: '100%', left: 0, top: 0 },
+            }}>
 
                 <TouchControls />
 
@@ -108,8 +105,8 @@ export default function IceSlideGamePage() {
                     key={sceneKey}
                 />
 
-            </div>
+            </Box>
 
-        </div>
+        </Box>
     );
 }

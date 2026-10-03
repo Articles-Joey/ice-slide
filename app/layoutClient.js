@@ -7,6 +7,7 @@ import { useStore } from "@/hooks/useStore";
 import useTouchControlsStore from "@/hooks/useTouchControlsStore";
 import DarkModeHandler from "@articles-media/articles-dev-box/DarkModeHandler";
 import GlobalClientModals from '@articles-media/articles-dev-box/GlobalClientModals';
+import HotkeyHandler from '@articles-media/articles-dev-box/HotkeyHandler';
 import GlobalBody from '@articles-media/articles-dev-box/GlobalBody';
 import ToontownModeHandler from '@articles-media/articles-dev-box/ToontownModeHandler';
 import { usePathname } from 'next/navigation';
@@ -42,6 +43,7 @@ export default function LayoutClient({
                 useStore={useStore}
             />
             <Suspense>
+                <HotkeyHandler useStore={useStore} useHotkeys={useHotkeys} />
                 <GlobalClientModals
                     useStore={useStore}
                     useAudioStore={useAudioStore}
@@ -88,16 +90,15 @@ export default function LayoutClient({
                             }
                         },
                         reset: () => {
-                            useAudioStore.getState().resetAudioSettings();
+                            useAudioStore.getState().setAudioSettings({
+                                enabled: true,
+                                backgroundMusicVolume: 15,
+                                soundEffectsVolume: 50,
+                            });
                         }
                     }}
                     infoModalConfig={{
                         previewImage: darkMode ? "img/game-preview.webp" : "img/game-preview.webp",
-                        appendContent: <>
-                            {/* <div className="small text-muted mb-2">
-                                View video of game that inspired this game below.
-                            </div> */}
-                        </>
                     }}
                 />
             </Suspense>

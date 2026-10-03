@@ -1,82 +1,60 @@
-import { useGameStore } from "@/hooks/useGameStore"
-import { useIceSlideStore } from "@/hooks/useIceSlideStore"
+"use client";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import UndoIcon from "@mui/icons-material/Undo";
+import { useGameStore } from "@/hooks/useGameStore";
 
 export default function GameDetailsPanel() {
-
-    const players = useGameStore(state => state.gameState.players)
+    const players = useGameStore((state) => state.gameState.players);
 
     return (
-        <div className="card game-details-panel">
-
-            <div className="card-body">
-
-                <div className="h6 mb-2 d-flex justify-content-between">
+        <Card sx={{ bgcolor: "game.card", backgroundImage: "none", border: 1, borderColor: "divider" }}>
+            <CardContent>
+                <Box sx={{ fontSize: "1rem", mb: 1, display: "flex", justifyContent: "space-between" }}>
                     <RoundAndTimer />
-                </div>
-
-                <div>Players</div>
-
+                </Box>
+                <Box>Players</Box>
                 {players?.map((player, index) => (
-                    <div key={index} className="player-entry border p-2">
-
-                        {/* <div className="player-color" style={{ backgroundColor: player.color }}></div> */}
-
-                        <div className="" style={{ fontSize: "0.6rem" }}>ID: {player.id}</div>
-
-                        <div className="player-name d-flex align-items-center">
-                            <span
-                                className={`badge ${player.ready ? 'bg-success' : 'bg-danger'} me-1`}
-                                style={{
-                                    fontSize: "0.6rem"
-                                }}
-                            >
-                                {player.ready ? "Ready" : "Not Ready"}
-                            </span>
+                    <Box key={player.id || index} sx={{ border: 1, borderColor: "divider", p: 1 }}>
+                        <Box sx={{ fontSize: "0.6rem" }}>ID: {player.id}</Box>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Chip label={player.ready ? "Ready" : "Not Ready"} color={player.ready ? "success" : "error"}
+                                size="small" sx={{ mr: 0.5, height: 18, fontSize: "0.6rem" }}
+                            />
                             {player.nickname || "?"}
-                        </div>
-
-                        {/* <div className="player-name">Ready: {player.ready ? "Yes" : "No"}</div> */}
-
-                        <div className="d-flex justify-content-between">
-
-                            <div>X: {player?.position?.x?.toFixed(2) || 0} | Z: {player?.position?.z?.toFixed(2) || 0}</div>
-
-                            <div className="d-flex">
-                                <div className="me-2">
-                                    <i className="fad fa-rocket"></i>
-                                    {player.hitPower}
-                                </div>
-                                <div>
-                                    <i className="fad fa-undo"></i>
-                                    {player.hitRotation}
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
+                        </Box>
+                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Box>X: {player?.position?.x?.toFixed(2) || 0} | Z: {player?.position?.z?.toFixed(2) || 0}</Box>
+                            <Box sx={{ display: "flex" }}>
+                                <Box sx={{ mr: 1, display: "flex", alignItems: "center", gap: "0.2rem" }}>
+                                    <RocketLaunchIcon fontSize="small" />{player.hitPower}
+                                </Box>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: "0.2rem" }}>
+                                    <UndoIcon fontSize="small" />{player.hitRotation}
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
                 ))}
-
-            </div>
-
-        </div>
-    )
+            </CardContent>
+        </Card>
+    );
 }
 
 function RoundAndTimer() {
-
-    const gameState = useGameStore(state => state.gameState)
-
+    const gameState = useGameStore((state) => state.gameState);
     return (
-        <div className="w-100">
-
-            <div className="d-flex align-items-center w-100 justify-content-between">
-                <div>Round: {gameState?.round + 1 || 0}</div>
-                <div>Time: {gameState?.timer || 0}</div>
-            </div>
-
-            <div className="small">Status: {gameState?.status || 0}</div>
-
-        </div>
-    )
+        <Box sx={{ width: "100%" }}>
+            <Box sx={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
+                <Box>Round: {gameState?.round + 1 || 0}</Box>
+                <Box>Time: {gameState?.timer || 0}</Box>
+            </Box>
+            <Box sx={{ fontSize: "0.875em" }}>Status: {gameState?.status || 0}</Box>
+        </Box>
+    );
 }
+
