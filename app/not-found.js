@@ -2,8 +2,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
-import Link from "next/link";
-import ArticlesButton from "@/components/UI/Button";
+import ReturnHomeButton from "./not-found-button";
 
 export const metadata = {
     title: "Ice Slide",
@@ -42,11 +41,10 @@ export default function Page() {
                         </CardContent>
                     </Card>
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <ArticlesButton component={Link} href="/">Return to Home</ArticlesButton>
+                        <ReturnHomeButton />
                     </Box>
                 </Box>
             </Container>
         </Box>
     );
 }
-
