@@ -20,6 +20,7 @@ export default function SocketLogicHandler(props) {
 
     const lastLogTime = useRef(0);
     const lastLaunchTime = useRef(0);
+    const lastGameStarted = useRef(null);
 
     if (!_hasHydrated) return null;
 
@@ -44,7 +45,14 @@ export default function SocketLogicHandler(props) {
                 handleGameUpdates: true,
                 onGameUpdate: (data) => {
 
-                    const lastLaunchStr = data?.gameState?.lastLaunch || data?.lastLaunch;
+                    const gameState = data?.gameState || data;
+                    if (gameState?.gameStarted !== lastGameStarted.current) {
+                        useIceSlideStore.getState().setLaunchPlayers(false);
+                        lastLaunchTime.current = 0;
+                        lastGameStarted.current = gameState?.gameStarted;
+                    }
+
+                    const lastLaunchStr = gameState?.status === "In Progress" && gameState?.lastLaunch;
                     if (lastLaunchStr) {
                         const lastLaunchTimeMs = new Date(lastLaunchStr).getTime();
                         

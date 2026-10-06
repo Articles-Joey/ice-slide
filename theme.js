@@ -12,18 +12,23 @@ const roboto = Roboto({
 
 export function createAppTheme(mode = "dark") {
 
-    const cardBackground = mode === "dark" ? "#013d67" : "#0073c3";
+    const cardBackground = mode === "dark" ? "#013d67" : "#0095ff";
 
     return createTheme({
         cssVariables: true,
         palette: {
             mode,
-            primary: { main: "#f9edcd" },
+            // primary: { 
+            //     main: "#f9edcd" 
+            // },
             background: { 
                 default: cardBackground, 
                 paper: cardBackground 
             },
-            text: { primary: "#fff", secondary: "rgba(255,255,255,0.7)" },
+            // text: { 
+            //     primary: "#fff", 
+            //     secondary: "rgba(255,255,255,0.7)" 
+            // },
             game: { card: cardBackground },
         },
         typography: { fontFamily: roboto.style.fontFamily },
@@ -50,9 +55,9 @@ export function createAppTheme(mode = "dark") {
                         ":root": {
                             ...compatibility[":root"],
                             "--card-background-override": cardBackground,
-                            "--articles-card-font-color": "#fff",
-                            "--articles-button-background-color": "#0977c6",
-                            "--articles-button-color": "#fff",
+                            // "--articles-card-font-color": "#fff",
+                            "--articles-button-background-color": mode === "dark" ? "#0f3752" : "#54b8ff",
+                            // "--articles-button-color": "#fff",
                         },
                         ".stats-overlay": {
                             position: "fixed",

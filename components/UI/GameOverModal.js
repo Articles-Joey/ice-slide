@@ -10,22 +10,30 @@ import ArticlesModal from "./ArticlesModal";
 
 export default function GameOverModal({ show, setShow }) {
     const socket = useSocketStore((state) => state.socket);
+    const connected = useSocketStore((state) => state.connected);
+    const winner = useGameStore((state) => state.gameState.winner);
+    const rankings = useGameStore((state) => state.gameState.rankings);
     const setGameState = useGameStore((state) => state.setGameState);
     const searchParams = useSearchParams();
     const server = searchParams.get("server");
     const local_play = searchParams.get("local_play");
 
     return (
-        <ArticlesModal show={show} setShow={setShow} title="Game Over" sx={{ p: 0 }}
+        <ArticlesModal
+            show={show}
+            setShow={setShow}
+            title="Game Over"
+            sx={{ p: 0 }}
+            maxWidth="xs"
             footerOverride={(setOpen) => (
                 <>
                     <ArticlesButton component={Link} href="/" variant="outline-dark" onClick={() => setOpen(false)}>
                         Close
                     </ArticlesButton>
-                    <ArticlesButton variant="outline-dark" onClick={() => {
+                    <ArticlesButton variant="outline-dark" disabled={Boolean(server && !connected)} onClick={() => {
                         if (server) {
                             socket.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`, {
-                                server_id: server, status: "In Lobby",
+                                server_id: server,
                             });
                         }
                         if (local_play === "true") {
@@ -47,16 +55,19 @@ export default function GameOverModal({ show, setShow }) {
         >
             <Box sx={{ p: 2 }}>
                 <Box sx={{ mb: 2 }}>
-                    The winner was <b>{show?.winner?.nickname || "Unknown"}</b> with a distance of <b>{show?.winner?.distance?.toFixed(2) || 0}</b> meters!
+                    {winner ? (
+                        <>The winner was <b>{winner.nickname || "Unknown"}</b> with a distance of <b>{winner.distance.toFixed(2)}</b> meters!</>
+                    ) : (
+                        "No player positions were available to determine a winner."
+                    )}
                 </Box>
                 <Box sx={{ mb: 1 }}>Here is how everyone else did:</Box>
-                {show?.rankings?.map((player, index) => (
+                {rankings?.filter((player) => player.id !== winner?.id).map((player, index) => (
                     <Box key={player.id || index}>
-                        <b>{player.nickname || "Unknown"}</b>: {player.distance?.toFixed(2) || 0} meters
+                        <b>{player.nickname || "Unknown"}</b>: {player.distance.toFixed(2)} meters
                     </Box>
                 ))}
             </Box>
         </ArticlesModal>
     );
 }
-

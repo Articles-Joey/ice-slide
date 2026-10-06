@@ -30,6 +30,7 @@ export default function ArticlesModal({
     actionVariant,
     footerOverride,
     sx,
+    maxWidth
 }) {
     const [closing, setClosing] = useState(false);
     const titleId = useId();
@@ -44,7 +45,7 @@ export default function ArticlesModal({
         <Dialog
             className={modalClassName}
             aria-labelledby={titleId}
-            maxWidth={size || "md"}
+            maxWidth={maxWidth || size || "md"}
             fullWidth
             open={visible && !closing}
             scroll={scrollable === false ? "body" : "paper"}

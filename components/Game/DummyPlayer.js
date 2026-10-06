@@ -7,8 +7,9 @@ import { useSocketStore } from "@/hooks/useSocketStore";
 import { Billboard, Text } from "@react-three/drei";
 import { ModelToonDogHead } from "../Models/ToonDogHead";
 import { useStore } from "@/hooks/useStore";
+import { useGameStore } from "@/hooks/useGameStore";
 
-function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socketId }) {
+function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socketId, playerId }) {
 
     const launchPlayers = useIceSlideStore(state => state.launchPlayers)
 
@@ -24,7 +25,7 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
         // type: 'Dynamic',
         args: [3, 3, 1, 32],
         position: position,
-        linearDamping: 0.2,
+        linearDamping: 0.4,
         angularDamping: 0.3,
         linearFactor: [1, 0, 1],   // prevent Y-axis launch on collision
         angularFactor: [0, 1, 0],  // prevent tumbling, only allow Y-axis spin
@@ -46,17 +47,20 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
     }, [launchPlayers, hitPower, hitRotation])
 
     useEffect(() => {
-        if (!socketId) return;
+        if (!socketId || playerId !== socketId) return;
         const interval = setInterval(() => {
+            const gameState = useGameStore.getState().gameState;
+            if (gameState.status !== "In Progress") return;
             const [x, y, z] = positionRef.current;
             useSocketStore.getState().socket?.emit('game:ice-slide:position', {
                 socketId,
                 x, y, z,
                 server,
+                gameStarted: gameState.gameStarted,
             });
         }, 1000);
         return () => clearInterval(interval);
-    }, [socketId, server]);
+    }, [socketId, playerId, server]);
 
     useEffect(() => {
         const unsubscribe = api.position.subscribe((position) => {
