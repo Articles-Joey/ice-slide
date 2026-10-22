@@ -4,20 +4,44 @@ Command: npx gltfjsx@6.5.3 Walrus.glb -T
 Files: Walrus.glb [37.77KB] > F:\My Documents\Sites games\ice-slide\public\models\Walrus-transformed.glb [7.36KB] (81%)
 */
 
-import React from 'react'
-import { useGLTF } from '@react-three/drei'
+import React from "react";
+import { useGLTF } from "@react-three/drei";
 
 export function ModelWalrus(props) {
-  const { nodes, materials } = useGLTF('models/Walrus-transformed.glb')
+    const { nodes, materials } = useGLTF("models/Walrus-transformed.glb");
 
-  return (
-    <group {...props} dispose={null} scale={0.01}>
-      <mesh geometry={nodes['Platonic1-Mesh'].geometry} material={materials.black} />
-      <mesh geometry={nodes['Platonic1-Mesh_1'].geometry} material={materials.white} />
-      <mesh geometry={nodes['Platonic1-Mesh_2'].geometry} material={materials.brown} />
-      <mesh geometry={nodes['Platonic1-Mesh_3'].geometry} material={materials.lightbrown} />
-    </group>
-  )
+    return (
+        <group
+            {...props}
+            dispose={null}
+            scale={0.01}
+        >
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes["Platonic1-Mesh"].geometry}
+                material={materials.black}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes["Platonic1-Mesh_1"].geometry}
+                material={materials.white}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes["Platonic1-Mesh_2"].geometry}
+                material={materials.brown}
+            />
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes["Platonic1-Mesh_3"].geometry}
+                material={materials.lightbrown}
+            />
+        </group>
+    );
 }
 
-useGLTF.preload('models/Walrus-transformed.glb')
+useGLTF.preload("models/Walrus-transformed.glb");

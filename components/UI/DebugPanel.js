@@ -14,18 +14,43 @@ export default function DebugPanel() {
     const incSceneKey = useStore((state) => state.incSceneKey);
 
     return (
-        <Card sx={{ bgcolor: "game.card", backgroundImage: "none", fontSize: "0.875rem", border: 1, borderColor: "divider" }}>
+        <Card
+            sx={{
+                bgcolor: "game.card",
+                backgroundImage: "none",
+                fontSize: "0.875rem",
+                border: 1,
+                borderColor: "divider",
+            }}
+        >
             <CardContent sx={{ p: 1, "&:last-child": { pb: 1 } }}>
                 <Box sx={{ fontSize: "0.875em" }}>Debug Controls</Box>
-                <Box sx={{ fontSize: "0.875em", border: 1, borderColor: "divider", p: 1 }}>
+                <Box
+                    sx={{
+                        fontSize: "0.875em",
+                        border: 1,
+                        borderColor: "divider",
+                        p: 1,
+                    }}
+                >
                     <Box>Rotation Angle: {hitRotation}</Box>
                     <Box>Power: {hitPower}/100</Box>
                 </Box>
                 <Box sx={{ display: "flex" }}>
-                    <ArticlesButton small sx={{ width: "50%" }} startIcon={<ReplayIcon />} onClick={() => incSceneKey()}>
+                    <ArticlesButton
+                        small
+                        sx={{ width: "50%" }}
+                        startIcon={<ReplayIcon />}
+                        onClick={() => incSceneKey()}
+                    >
                         Reload Game
                     </ArticlesButton>
-                    <ArticlesButton small sx={{ width: "50%" }} startIcon={<ReplayIcon />} onClick={() => incSceneKey()}>
+                    <ArticlesButton
+                        small
+                        sx={{ width: "50%" }}
+                        startIcon={<ReplayIcon />}
+                        onClick={() => incSceneKey()}
+                    >
                         Reset Camera
                     </ArticlesButton>
                 </Box>
@@ -33,4 +58,3 @@ export default function DebugPanel() {
         </Card>
     );
 }
-

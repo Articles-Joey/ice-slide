@@ -1,7 +1,6 @@
 import { ModelIceberg } from "../Models/Iceberg";
 
 export default function Icebergs() {
-
     return (
         <>
             <ModelIceberg
@@ -21,5 +20,5 @@ export default function Icebergs() {
                 scale={0.05}
             />
         </>
-    )
+    );
 }

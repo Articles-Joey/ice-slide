@@ -3,21 +3,20 @@ import { Image } from "@react-three/drei";
 import { degToRad } from "three/src/math/MathUtils.js";
 
 export default function LogoCube() {
+    const graphicsQuality = useStore((state) => state.graphicsQuality);
+    const darkMode = useStore((state) => state.darkMode);
 
-    const graphicsQuality = useStore(state => state.graphicsQuality)
-    const darkMode = useStore(state => state.darkMode)
-
-    const distance = 300
-    const height = 60
+    const distance = 500;
+    const height = 120;
 
     const sides = [
         { position: [distance, height, 0], rotation: [0, degToRad(-90), 0] },
         { position: [-distance, height, 0], rotation: [0, degToRad(90), 0] },
         { position: [0, height, distance], rotation: [0, degToRad(180), 0] },
         { position: [0, height, -distance], rotation: [0, degToRad(0), 0] },
-    ]
+    ];
 
-    if (graphicsQuality === 'Low') return
+    if (graphicsQuality === "Low") return;
 
     return (
         <group>
@@ -33,5 +32,5 @@ export default function LogoCube() {
                 />
             ))}
         </group>
-    )
+    );
 }

@@ -11,23 +11,22 @@ const roboto = Roboto({
 });
 
 export function createAppTheme(mode = "dark") {
-
     const cardBackground = mode === "dark" ? "#013d67" : "#0095ff";
 
     return createTheme({
         cssVariables: true,
         palette: {
             mode,
-            // primary: { 
-            //     main: "#f9edcd" 
+            // primary: {
+            //     main: "#f9edcd"
             // },
-            background: { 
-                default: cardBackground, 
-                paper: cardBackground 
+            background: {
+                default: cardBackground,
+                paper: cardBackground,
             },
-            // text: { 
-            //     primary: "#fff", 
-            //     secondary: "rgba(255,255,255,0.7)" 
+            // text: {
+            //     primary: "#fff",
+            //     secondary: "rgba(255,255,255,0.7)"
             // },
             game: { card: cardBackground },
         },
@@ -39,24 +38,30 @@ export function createAppTheme(mode = "dark") {
             MuiAlert: {
                 styleOverrides: {
                     root: {
-                        variants: [{
-                            props: { severity: "info" },
-                            style: { backgroundColor: "#60a5fa" },
-                        }],
+                        variants: [
+                            {
+                                props: { severity: "info" },
+                                style: { backgroundColor: "#60a5fa" },
+                            },
+                        ],
                     },
                 },
             },
             MuiCssBaseline: {
                 // Dev-box still uses these compatibility utilities internally.
                 styleOverrides: (muiTheme) => {
-                    const compatibility = bootstrapCompatibilityTheme.MuiCssBaseline.styleOverrides(muiTheme);
+                    const compatibility =
+                        bootstrapCompatibilityTheme.MuiCssBaseline.styleOverrides(
+                            muiTheme,
+                        );
                     return {
                         ...compatibility,
                         ":root": {
                             ...compatibility[":root"],
                             "--card-background-override": cardBackground,
                             // "--articles-card-font-color": "#fff",
-                            "--articles-button-background-color": mode === "dark" ? "#0f3752" : "#54b8ff",
+                            "--articles-button-background-color":
+                                mode === "dark" ? "#0f3752" : "#54b8ff",
                             // "--articles-button-color": "#fff",
                         },
                         ".stats-overlay": {

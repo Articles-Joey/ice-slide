@@ -27,27 +27,46 @@ export default function GameOverModal({ show, setShow }) {
             maxWidth="xs"
             footerOverride={(setOpen) => (
                 <>
-                    <ArticlesButton component={Link} href="/" variant="outline-dark" onClick={() => setOpen(false)}>
+                    <ArticlesButton
+                        component={Link}
+                        href="/"
+                        variant="outline-dark"
+                        onClick={() => setOpen(false)}
+                    >
                         Close
                     </ArticlesButton>
-                    <ArticlesButton variant="outline-dark" disabled={Boolean(server && !connected)} onClick={() => {
-                        if (server) {
-                            socket.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`, {
-                                server_id: server,
-                            });
-                        }
-                        if (local_play === "true") {
-                            setGameState({
-                                ...useGameStore.getState().gameState,
-                                status: "In Lobby",
-                                timer: 0,
-                                positions: Array.from({ length: 23 }, (_, player_i) => ({
-                                    player_index: player_i, x: 0, y: player_i * 3,
-                                    newX: Math.floor(Math.random() * 6) + 5,
-                                })),
-                            });
-                        }
-                    }}>
+                    <ArticlesButton
+                        variant="outline-dark"
+                        disabled={Boolean(server && !connected)}
+                        onClick={() => {
+                            if (server) {
+                                socket.emit(
+                                    `game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`,
+                                    {
+                                        server_id: server,
+                                    },
+                                );
+                            }
+                            if (local_play === "true") {
+                                setGameState({
+                                    ...useGameStore.getState().gameState,
+                                    status: "In Lobby",
+                                    timer: 0,
+                                    positions: Array.from(
+                                        { length: 23 },
+                                        (_, player_i) => ({
+                                            player_index: player_i,
+                                            x: 0,
+                                            y: player_i * 3,
+                                            newX:
+                                                Math.floor(Math.random() * 6) +
+                                                5,
+                                        }),
+                                    ),
+                                });
+                            }
+                        }}
+                    >
                         Play Again
                     </ArticlesButton>
                 </>
@@ -56,17 +75,24 @@ export default function GameOverModal({ show, setShow }) {
             <Box sx={{ p: 2 }}>
                 <Box sx={{ mb: 2 }}>
                     {winner ? (
-                        <>The winner was <b>{winner.nickname || "Unknown"}</b> with a distance of <b>{winner.distance.toFixed(2)}</b> meters!</>
+                        <>
+                            The winner was <b>{winner.nickname || "Unknown"}</b>{" "}
+                            with a distance of{" "}
+                            <b>{winner.distance.toFixed(2)}</b> meters!
+                        </>
                     ) : (
                         "No player positions were available to determine a winner."
                     )}
                 </Box>
                 <Box sx={{ mb: 1 }}>Here is how everyone else did:</Box>
-                {rankings?.filter((player) => player.id !== winner?.id).map((player, index) => (
-                    <Box key={player.id || index}>
-                        <b>{player.nickname || "Unknown"}</b>: {player.distance.toFixed(2)} meters
-                    </Box>
-                ))}
+                {rankings
+                    ?.filter((player) => player.id !== winner?.id)
+                    .map((player, index) => (
+                        <Box key={player.id || index}>
+                            <b>{player.nickname || "Unknown"}</b>:{" "}
+                            {player.distance.toFixed(2)} meters
+                        </Box>
+                    ))}
             </Box>
         </ArticlesModal>
     );

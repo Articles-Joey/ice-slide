@@ -4,16 +4,24 @@ Command: npx gltfjsx@6.5.3 Penguin.glb -T
 Files: Penguin.glb [31.51KB] > F:\My Documents\Sites games\ice-slide\public\models\Penguin-transformed.glb [5.12KB] (84%)
 */
 
-import React from 'react'
-import { useGLTF } from '@react-three/drei'
+import React from "react";
+import { useGLTF } from "@react-three/drei";
 
 export function ModelPenguin(props) {
-  const { nodes, materials } = useGLTF('models/Penguin-transformed.glb')
-  return (
-    <group {...props} dispose={null}>
-      <mesh geometry={nodes.Geo_Penguin.geometry} material={materials.lambert2SG} />
-    </group>
-  )
+    const { nodes, materials } = useGLTF("models/Penguin-transformed.glb");
+    return (
+        <group
+            {...props}
+            dispose={null}
+        >
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Geo_Penguin.geometry}
+                material={materials.lambert2SG}
+            />
+        </group>
+    );
 }
 
-useGLTF.preload('models/Penguin-transformed.glb')
+useGLTF.preload("models/Penguin-transformed.glb");

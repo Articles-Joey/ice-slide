@@ -23,12 +23,30 @@ export default function LeftPanelContent() {
 
     return (
         <Box sx={{ width: "100%" }}>
-            <Card sx={{ bgcolor: "game.card", backgroundImage: "none", fontSize: "0.875rem", border: 1, borderColor: "divider" }}>
+            <Card
+                sx={{
+                    bgcolor: "game.card",
+                    backgroundImage: "none",
+                    fontSize: "0.875rem",
+                    border: 1,
+                    borderColor: "divider",
+                }}
+            >
                 <CardContent sx={{ p: 1, "&:last-child": { pb: 1 } }}>
                     <Box sx={{ display: "flex", flexWrap: "wrap", mb: 2 }}>
-                        <GameMenuPrimaryButtonGroup useStore={useStore} type="GameMenu" useRouter={useRouter} />
+                        <GameMenuPrimaryButtonGroup
+                            useStore={useStore}
+                            type="GameMenu"
+                            useRouter={useRouter}
+                        />
                     </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Box>Server: {server}</Box>
                         <Box>Players: {players?.length || 0}/4</Box>
                     </Box>
@@ -36,17 +54,30 @@ export default function LeftPanelContent() {
                         <ArticlesButton
                             sx={{ width: "100%", mt: 2 }}
                             disabled={!server || !connected}
-                            onClick={() => socket?.emit(`game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`, {
-                                server_id: server,
-                            })}
+                            onClick={() =>
+                                socket?.emit(
+                                    `game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`,
+                                    {
+                                        server_id: server,
+                                    },
+                                )
+                            }
                         >
                             Start Game
                         </ArticlesButton>
                     )}
                     {!connected && (
                         <Box sx={{ mb: 2 }}>
-                            <Typography variant="subtitle1" sx={{ mb: 0.5 }}>Not connected</Typography>
-                            <ArticlesButton sx={{ width: "100%" }} onClick={() => socket?.connect()}>
+                            <Typography
+                                variant="subtitle1"
+                                sx={{ mb: 0.5 }}
+                            >
+                                Not connected
+                            </Typography>
+                            <ArticlesButton
+                                sx={{ width: "100%" }}
+                                onClick={() => socket?.connect()}
+                            >
                                 Reconnect!
                             </ArticlesButton>
                         </Box>
@@ -58,4 +89,3 @@ export default function LeftPanelContent() {
         </Box>
     );
 }
-

@@ -4,16 +4,24 @@ Command: npx gltfjsx@6.5.3 Bear.glb -T
 Files: Bear.glb [40.84KB] > F:\My Documents\Sites games\ice-slide\public\models\Bear-transformed.glb [6KB] (85%)
 */
 
-import React from 'react'
-import { useGLTF } from '@react-three/drei'
+import React from "react";
+import { useGLTF } from "@react-three/drei";
 
 export function ModelBear(props) {
-  const { nodes, materials } = useGLTF('models/Bear-transformed.glb')
-  return (
-    <group {...props} dispose={null}>
-      <mesh geometry={nodes.Geo_Bear.geometry} material={materials.lambert2SG} />
-    </group>
-  )
+    const { nodes, materials } = useGLTF("models/Bear-transformed.glb");
+    return (
+        <group
+            {...props}
+            dispose={null}
+        >
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Geo_Bear.geometry}
+                material={materials.lambert2SG}
+            />
+        </group>
+    );
 }
 
-useGLTF.preload('models/Bear-transformed.glb')
+useGLTF.preload("models/Bear-transformed.glb");

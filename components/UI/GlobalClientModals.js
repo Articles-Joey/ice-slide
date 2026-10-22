@@ -19,9 +19,14 @@ export default function GlobalClientModals(props) {
                 tabs: {
                     Graphics: { darkMode: true, landingAnimation: true },
                     Audio: {
-                        sliders: Object.keys(useAudioStore.getState().audioSettings)
+                        sliders: Object.keys(
+                            useAudioStore.getState().audioSettings,
+                        )
                             .filter((key) => key !== "enabled")
-                            .map((key) => ({ key, label: key.replace(/([A-Z])/g, " $1") })),
+                            .map((key) => ({
+                                key,
+                                label: key.replace(/([A-Z])/g, " $1"),
+                            })),
                     },
                     Controls: { touchControls: true },
                     Multiplayer: { serverUrl: true },
@@ -33,4 +38,3 @@ export default function GlobalClientModals(props) {
         />
     );
 }
-

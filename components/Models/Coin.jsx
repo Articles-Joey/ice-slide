@@ -4,51 +4,67 @@ Command: npx gltfjsx@6.5.3 Coin.glb -T
 Files: Coin.glb [13.81KB] > F:\My Documents\Sites games\ice-slide\public\models\Coin-transformed.glb [3.24KB] (77%)
 */
 
-import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
-import { useStore } from '@/hooks/useStore'
+import React, { useRef } from "react";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useStore } from "@/hooks/useStore";
 
 export function ModelCoin(props) {
+    const darkMode = useStore((state) => state.darkMode);
 
-  const darkMode = useStore((state) => state.darkMode)
+    const { nodes, materials } = useGLTF("models/Coin-transformed.glb");
+    const groupRef = useRef();
+    const randomOffset = useRef(Math.random() * Math.PI * 2);
 
-  const { nodes, materials } = useGLTF('models/Coin-transformed.glb')
-  const groupRef = useRef()
-  const randomOffset = useRef(Math.random() * Math.PI * 2)
+    useFrame((state) => {
+        if (!groupRef.current) return;
+        const t = state.clock.getElapsedTime() + randomOffset.current;
+        // Rotate slowly
+        groupRef.current.rotation.y = t * 0.5;
+        // Move up and down endlessly relative to the base position
+        const baseY = props.position?.[1] ?? 0;
+        groupRef.current.position.y = baseY + Math.sin(t * 2) * 0.1;
+    });
 
-  useFrame((state) => {
-    if (!groupRef.current) return
-    const t = state.clock.getElapsedTime() + randomOffset.current
-    // Rotate slowly
-    groupRef.current.rotation.y = t * 0.5
-    // Move up and down endlessly relative to the base position
-    const baseY = props.position?.[1] ?? 0
-    groupRef.current.position.y = baseY + Math.sin(t * 2) * 0.1
-  })
-
-  return (
-    <group ref={groupRef} {...props} dispose={null}>
-      <group rotation={[-Math.PI / 2, 0, 0]} scale={100}>
-        <mesh geometry={nodes.Coin_1.geometry} material={materials.Yellow}>
-          <meshStandardMaterial
-            attach="material"
-            color={materials.Yellow.color}
-            emissive={materials.Yellow.color}
-            emissiveIntensity={darkMode ? 0 : 1.5}
-          />
-        </mesh>
-        <mesh geometry={nodes.Coin_2.geometry} material={materials.DarkYellow}>
-          <meshStandardMaterial
-            attach="material"
-            color={materials.DarkYellow.color}
-            emissive={materials.DarkYellow.color}
-            emissiveIntensity={darkMode ? 0 : 1.2}
-          />
-        </mesh>
-      </group>
-    </group>
-  )
+    return (
+        <group
+            ref={groupRef}
+            {...props}
+            dispose={null}
+        >
+            <group
+                rotation={[-Math.PI / 2, 0, 0]}
+                scale={100}
+            >
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Coin_1.geometry}
+                    material={materials.Yellow}
+                >
+                    <meshStandardMaterial
+                        attach="material"
+                        color={materials.Yellow.color}
+                        emissive={materials.Yellow.color}
+                        emissiveIntensity={darkMode ? 0 : 1.5}
+                    />
+                </mesh>
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Coin_2.geometry}
+                    material={materials.DarkYellow}
+                >
+                    <meshStandardMaterial
+                        attach="material"
+                        color={materials.DarkYellow.color}
+                        emissive={materials.DarkYellow.color}
+                        emissiveIntensity={darkMode ? 0 : 1.2}
+                    />
+                </mesh>
+            </group>
+        </group>
+    );
 }
 
-useGLTF.preload('models/Coin-transformed.glb')
+useGLTF.preload("models/Coin-transformed.glb");

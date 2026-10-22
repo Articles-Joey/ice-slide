@@ -45,11 +45,10 @@ This game was inspired by a mini game inside the game Toontown Online.
 [Penguin Model - Google](https://poly.pizza/m/fBXvsC6pe_V)  
 [Gear Model - Google](https://poly.pizza/m/cMM3raHMCug)  
 [Bear Model - Google](https://poly.pizza/m/0PXWfxfb0Hu)  
-[Toontown Models - Disney](https://en.wikipedia.org/wiki/Toontown_Online)  
-
+[Toontown Models - Disney](https://en.wikipedia.org/wiki/Toontown_Online)
 
 Landing Page Preview  
-![Game Preview](/public/img/landing-preview.webp)  
+![Game Preview](/public/img/landing-preview.webp)
 
 Old Game Preview  
 ![Game Preview](/public/img/old-game-preview.webp)

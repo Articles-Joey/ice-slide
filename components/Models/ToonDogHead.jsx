@@ -8,16 +8,24 @@ Source: https://sketchfab.com/3d-models/dog-head-1af917cff4384edf9ef692d59c1c95d
 Title: Dog Head
 */
 
-import React from 'react'
-import { useGLTF } from '@react-three/drei'
+import React from "react";
+import { useGLTF } from "@react-three/drei";
 
 export function ModelToonDogHead(props) {
-  const { nodes, materials } = useGLTF('models/ToonDogHead-transformed.glb')
-  return (
-    <group {...props} dispose={null}>
-      <mesh geometry={nodes.polySurface1_lambert4_0.geometry} material={materials.PaletteMaterial001} />
-    </group>
-  )
+    const { nodes, materials } = useGLTF("models/ToonDogHead-transformed.glb");
+    return (
+        <group
+            {...props}
+            dispose={null}
+        >
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.polySurface1_lambert4_0.geometry}
+                material={materials.PaletteMaterial001}
+            />
+        </group>
+    );
 }
 
-useGLTF.preload('models/ToonDogHead-transformed.glb')
+useGLTF.preload("models/ToonDogHead-transformed.glb");

@@ -1,160 +1,162 @@
-import generateRandomNickname from '@/util/generateRandomNickname';
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import generateRandomNickname from "@/util/generateRandomNickname";
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-import typicalZustandStoreExcludes from '@articles-media/articles-dev-box/typicalZustandStoreExcludes';
-import typicalZustandStoreStateSlice from '@articles-media/articles-dev-box/typicalZustandStoreStateSlice';
+import typicalZustandStoreExcludes from "@articles-media/articles-dev-box/typicalZustandStoreExcludes";
+import typicalZustandStoreStateSlice from "@articles-media/articles-dev-box/typicalZustandStoreStateSlice";
 
 export const useStore = create()(
-  persist(
-    (set, get) => ({
+    persist(
+        (set, get) => ({
+            ...typicalZustandStoreStateSlice(set, get, generateRandomNickname),
 
-      ...typicalZustandStoreStateSlice(set, get, generateRandomNickname),
+            // _hasHydrated: false,
+            // setHasHydrated: (state) => {
+            //   set({
+            //     _hasHydrated: state
+            //   });
+            // },
 
-      // _hasHydrated: false,
-      // setHasHydrated: (state) => {
-      //   set({
-      //     _hasHydrated: state
-      //   });
-      // },
+            // nickname: generateRandomNickname(),
+            // setNickname: (newValue) => {
+            //   set((prev) => ({
+            //     nickname: newValue
+            //   }))
+            // },
+            // randomNickname: () => {
 
-      // nickname: generateRandomNickname(),
-      // setNickname: (newValue) => {
-      //   set((prev) => ({
-      //     nickname: newValue
-      //   }))
-      // },
-      // randomNickname: () => {
+            //   const newNickname = generateRandomNickname();
 
-      //   const newNickname = generateRandomNickname();
+            //   set((prev) => ({
+            //     nickname: newNickname
+            //   }))
+            // },
 
-      //   set((prev) => ({
-      //     nickname: newNickname
-      //   }))
-      // },
+            // character: {
+            //   model: 'Clownfish',
+            //   color: '#d87e07'
+            // },
+            // setCharacter: (newValue) => {
+            //   set((prev) => ({
+            //     character: newValue
+            //   }))
+            // },
+            // characters: [
+            //   {
+            //     name: "Clownfish",
+            //     image: `${process.env.NEXT_PUBLIC_CDN}${assets_src}ClownfishModelThumb.jpg`,
+            //     model:
+            //       (
+            //         <group>
+            //           <ClownfishModel />
+            //         </group>
+            //       ),
+            //     defaultColor: '#FFFFFF',
+            //   },
+            //   {
+            //     name: "Bone Fish",
+            //     image: `${process.env.NEXT_PUBLIC_CDN}${assets_src}BoneFishModelThumb.jpg`,
+            //     model:
+            //       (
+            //         <group>
+            //           <BoneFishModel />
+            //         </group>
+            //       ),
+            //     defaultColor: '',
+            //   }
+            // ],
 
-      // character: {
-      //   model: 'Clownfish',
-      //   color: '#d87e07'
-      // },
-      // setCharacter: (newValue) => {
-      //   set((prev) => ({
-      //     character: newValue
-      //   }))
-      // },
-      // characters: [
-      //   {
-      //     name: "Clownfish",
-      //     image: `${process.env.NEXT_PUBLIC_CDN}${assets_src}ClownfishModelThumb.jpg`,
-      //     model:
-      //       (
-      //         <group>
-      //           <ClownfishModel />
-      //         </group>
-      //       ),
-      //     defaultColor: '#FFFFFF',
-      //   },
-      //   {
-      //     name: "Bone Fish",
-      //     image: `${process.env.NEXT_PUBLIC_CDN}${assets_src}BoneFishModelThumb.jpg`,
-      //     model:
-      //       (
-      //         <group>
-      //           <BoneFishModel />
-      //         </group>
-      //       ),
-      //     defaultColor: '',
-      //   }
-      // ],
+            // darkMode: null,
+            // setDarkMode: (newValue) => {
+            //   set((prev) => ({
+            //     darkMode: newValue
+            //   }))
+            // },
+            // toggleDarkMode: () => set({ darkMode: !get().darkMode }),
 
-      // darkMode: null,
-      // setDarkMode: (newValue) => {
-      //   set((prev) => ({
-      //     darkMode: newValue
-      //   }))
-      // },
-      // toggleDarkMode: () => set({ darkMode: !get().darkMode }),
+            // toontownMode: false,
+            // setToontownMode: (newValue) => {
+            //   set((prev) => ({
+            //     toontownMode: newValue
+            //   }))
+            // },
+            // toggleToontownMode: () => set({ toontownMode: !get().toontownMode }),
 
-      // toontownMode: false,
-      // setToontownMode: (newValue) => {
-      //   set((prev) => ({
-      //     toontownMode: newValue
-      //   }))
-      // },
-      // toggleToontownMode: () => set({ toontownMode: !get().toontownMode }),
+            updateCamera: null,
+            setUpdateCamera: (updateCamera) => set({ updateCamera }),
 
-      updateCamera: null,
-      setUpdateCamera: (updateCamera) => set({ updateCamera }),
+            threeDimensional: true, // 'Light' | 'Dark' | null
+            setThreeDimensional: (threeDimensional) =>
+                set({ threeDimensional }),
 
-      threeDimensional: true, // 'Light' | 'Dark' | null
-      setThreeDimensional: (threeDimensional) => set({ threeDimensional }),
+            // showMenu: false,
+            // setShowMenu: (value) => set({ showMenu: value }),
+            // toggleShowMenu: () => set({ showMenu: !get().showMenu }),
 
-      // showMenu: false,
-      // setShowMenu: (value) => set({ showMenu: value }),
-      // toggleShowMenu: () => set({ showMenu: !get().showMenu }),
+            // sidebar: true,
+            // setSidebar: (value) => set({ sidebar: value }),
+            // toggleSidebar: () => set({ sidebar: !get().sidebar }),
 
-      // sidebar: true,
-      // setSidebar: (value) => set({ sidebar: value }),
-      // toggleSidebar: () => set({ sidebar: !get().sidebar }),
+            // landingAnimation: true,
+            // setLandingAnimation: (value) => set({ landingAnimation: value }),
+            // toggleLandingAnimation: () => set({ landingAnimation: !get().landingAnimation }),
 
-      // landingAnimation: true,
-      // setLandingAnimation: (value) => set({ landingAnimation: value }),
-      // toggleLandingAnimation: () => set({ landingAnimation: !get().landingAnimation }),
+            // showInfoModal: false,
+            // setShowInfoModal: (value) => set({ showInfoModal: value }),
+            // toggleInfoModal: () => set({ showInfoModal: !get().showInfoModal }),
 
-      // showInfoModal: false,
-      // setShowInfoModal: (value) => set({ showInfoModal: value }),
-      // toggleInfoModal: () => set({ showInfoModal: !get().showInfoModal }),
+            loginInfoModal: false,
+            setLoginInfoModal: (value) => set({ loginInfoModal: value }),
+            toggleLoginInfoModal: () =>
+                set({ loginInfoModal: !get().loginInfoModal }),
 
-      loginInfoModal: false,
-      setLoginInfoModal: (value) => set({ loginInfoModal: value }),
-      toggleLoginInfoModal: () => set({ loginInfoModal: !get().loginInfoModal }),
+            // showSettingsModal: false,
+            // setShowSettingsModal: (value) => set({ showSettingsModal: value }),
+            // toggleSettingsModal: () => set({ showSettingsModal: !get().showSettingsModal }),
 
-      // showSettingsModal: false,
-      // setShowSettingsModal: (value) => set({ showSettingsModal: value }),
-      // toggleSettingsModal: () => set({ showSettingsModal: !get().showSettingsModal }),
+            // showCreditsModal: false,
+            // setShowCreditsModal: (value) => set({ showCreditsModal: value }),
+            // toggleCreditsModal: () => set({ showCreditsModal: !get().showCreditsModal }),
 
-      // showCreditsModal: false,
-      // setShowCreditsModal: (value) => set({ showCreditsModal: value }),
-      // toggleCreditsModal: () => set({ showCreditsModal: !get().showCreditsModal }),
+            showGameOverModal: false,
+            setShowGameOverModal: (value) => set({ showGameOverModal: value }),
+            toggleGameOverModal: () =>
+                set({ showGameOverModal: !get().showGameOverModal }),
 
-      showGameOverModal: false,
-      setShowGameOverModal: (value) => set({ showGameOverModal: value }),
-      toggleGameOverModal: () => set({ showGameOverModal: !get().showGameOverModal }),
+            // graphicsQuality: "High",
+            // setGraphicsQuality: (value) => set({ graphicsQuality: value }),
 
-      // graphicsQuality: "High",
-      // setGraphicsQuality: (value) => set({ graphicsQuality: value }),
+            // lobbyDetails: {
+            //   players: [],
+            //   games: [],
+            // },
+            // setLobbyDetails: (lobbyDetails) => set({ lobbyDetails }),
 
-      // lobbyDetails: {
-      //   players: [],
-      //   games: [],
-      // },
-      // setLobbyDetails: (lobbyDetails) => set({ lobbyDetails }),
+            // debug: false,
+            // setDebug: (newValue) => {
+            //   set((prev) => ({
+            //     debug: newValue
+            //   }))
+            // },
 
-      // debug: false,
-      // setDebug: (newValue) => {
-      //   set((prev) => ({
-      //     debug: newValue
-      //   }))
-      // },
-
-      // sceneKey: 0,
-      // incSceneKey: () => set((prev) => ({
-      //   sceneKey: prev.sceneKey + 1
-      // })),
-
-    }),
-    {
-      name: `${process.env.NEXT_PUBLIC_GAME_KEY}-store`,
-      version: 2,
-      partialize: (state) =>
-        Object.fromEntries(
-          Object.entries(state).filter(([key]) => ![
-            ...typicalZustandStoreExcludes,
-          ].includes(key))
-        ),
-      onRehydrateStorage: () => (state) => {
-        state.setHasHydrated(true)
-      },
-    },
-  ),
-)
+            // sceneKey: 0,
+            // incSceneKey: () => set((prev) => ({
+            //   sceneKey: prev.sceneKey + 1
+            // })),
+        }),
+        {
+            name: `${process.env.NEXT_PUBLIC_GAME_KEY}-store`,
+            version: 2,
+            partialize: (state) =>
+                Object.fromEntries(
+                    Object.entries(state).filter(
+                        ([key]) =>
+                            ![...typicalZustandStoreExcludes].includes(key),
+                    ),
+                ),
+            onRehydrateStorage: () => (state) => {
+                state.setHasHydrated(true);
+            },
+        },
+    ),
+);

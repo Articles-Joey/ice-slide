@@ -4,8 +4,7 @@ import { ModelCoin } from "../Models/Coin";
 import { useStore } from "@/hooks/useStore";
 
 function Star({ position, args, onCollect }) {
-
-    const debug = useStore(state => state.debug);
+    const debug = useStore((state) => state.debug);
 
     const [collected, setCollected] = useState(false);
 
@@ -17,35 +16,35 @@ function Star({ position, args, onCollect }) {
         position: position,
         onCollide: () => {
             if (!collected) {
-                console.log("Star was collected!")
-                setCollected(true)
-                if (onCollect) onCollect()
+                console.log("Star was collected!");
+                setCollected(true);
+                if (onCollect) onCollect();
             }
-        }
-    }))
+        },
+    }));
 
     return (
-        <mesh ref={ref} castShadow>
-
-            <ModelCoin 
+        <mesh
+            ref={ref}
+            castShadow
+        >
+            <ModelCoin
                 scale={5}
                 position={[0, 2, 0]}
             />
 
-            {debug &&
+            {debug && (
                 <>
                     <cylinderGeometry args={args} />
-                    <meshStandardMaterial 
-                        color="gold" 
+                    <meshStandardMaterial
+                        color="gold"
                         transparent={true}
                         opacity={collected ? 0 : 0.5}
                     />
                 </>
-            }
-
+            )}
         </mesh>
-    )
-
+    );
 }
 
 export default Star;

@@ -7,9 +7,8 @@ import { useStore } from "@/hooks/useStore";
 import { ModelPluto } from "../Models/Pluto";
 
 export default function WalrusWithLogic({ position }) {
-
-    const toontownMode = useStore(state => state.toontownMode);
-    const graphicsQuality = useStore(state => state.graphicsQuality);
+    const toontownMode = useStore((state) => state.toontownMode);
+    const graphicsQuality = useStore((state) => state.graphicsQuality);
 
     let nickname = "Wally the Walrus";
     if (toontownMode) {
@@ -20,13 +19,15 @@ export default function WalrusWithLogic({ position }) {
     const initialZ = position?.[2] || 0;
 
     const groupRef = useRef();
-    const [targetPos, setTargetPos] = useState(new THREE.Vector3(initialX, 0, initialZ));
+    const [targetPos, setTargetPos] = useState(
+        new THREE.Vector3(initialX, 0, initialZ),
+    );
     const [isMoving, setIsMoving] = useState(false);
     const currentPos = useRef(new THREE.Vector3(initialX, 0, initialZ));
     const targetRotation = useRef(0);
 
     useEffect(() => {
-        if (graphicsQuality === 'Low') return;
+        if (graphicsQuality === "Low") return;
 
         let timeout;
         const pickNewTarget = () => {
@@ -39,7 +40,7 @@ export default function WalrusWithLogic({ position }) {
 
             targetRotation.current = Math.atan2(
                 newTarget.x - currentPos.current.x,
-                newTarget.z - currentPos.current.z
+                newTarget.z - currentPos.current.z,
             );
         };
 
@@ -52,7 +53,7 @@ export default function WalrusWithLogic({ position }) {
     }, [isMoving, initialX, initialZ, graphicsQuality]);
 
     useFrame(() => {
-        if (groupRef.current && graphicsQuality !== 'Low') {
+        if (groupRef.current && graphicsQuality !== "Low") {
             if (isMoving) {
                 currentPos.current.lerp(targetPos, 0.05);
                 groupRef.current.position.x = currentPos.current.x;
@@ -61,7 +62,7 @@ export default function WalrusWithLogic({ position }) {
                 groupRef.current.rotation.y = THREE.MathUtils.lerp(
                     groupRef.current.rotation.y,
                     targetRotation.current,
-                    0.1
+                    0.1,
                 );
 
                 if (currentPos.current.distanceTo(targetPos) < 0.01) {
@@ -74,7 +75,15 @@ export default function WalrusWithLogic({ position }) {
     return (
         <group
             ref={groupRef}
-            position={graphicsQuality === 'Low' ? position : [currentPos.current.x, position?.[1] || 0, currentPos.current.z]}
+            position={
+                graphicsQuality === "Low"
+                    ? position
+                    : [
+                          currentPos.current.x,
+                          position?.[1] || 0,
+                          currentPos.current.z,
+                      ]
+            }
         >
             <Billboard>
                 <Text
@@ -91,7 +100,6 @@ export default function WalrusWithLogic({ position }) {
 
             {!toontownMode && <ModelWalrus />}
             {toontownMode && <ModelPluto />}
-
         </group>
     );
 }

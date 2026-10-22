@@ -8,34 +8,44 @@ Source: https://sketchfab.com/3d-models/donald-duck-8f2ace7f87144460a714c6e5b7af
 Title: Donald Duck
 */
 
-import React from 'react'
-import { useGraph } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
-import { SkeletonUtils } from 'three-stdlib'
-import { useStore } from '@/hooks/useStore'
+import React from "react";
+import { useGraph } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import { useStore } from "@/hooks/useStore";
 
 export function ModelDonaldDuck(props) {
-  const darkMode = useStore((state) => state.darkMode)
+    const darkMode = useStore((state) => state.darkMode);
 
-  const { scene } = useGLTF('models/DonaldDuck-transformed.glb')
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
-  const { nodes, materials } = useGraph(clone)
+    const { scene } = useGLTF("models/DonaldDuck-transformed.glb");
+    const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
+    const { nodes, materials } = useGraph(clone);
 
-  // Helper to darken material if darkMode
-  function getMaterial(mat) {
-    if (!darkMode) return mat
-    const darkMat = mat.clone()
-    if (darkMat.color) darkMat.color.multiplyScalar(0.25)
-    if (darkMat.emissive) darkMat.emissive.multiplyScalar(0.25)
-    return darkMat
-  }
+    // Helper to darken material if darkMode
+    function getMaterial(mat) {
+        if (!darkMode) return mat;
+        const darkMat = mat.clone();
+        if (darkMat.color) darkMat.color.multiplyScalar(0.25);
+        if (darkMat.emissive) darkMat.emissive.multiplyScalar(0.25);
+        return darkMat;
+    }
 
-  return (
-    <group {...props} dispose={null}>
-      <primitive object={nodes._rootJoint} />
-      <skinnedMesh geometry={nodes.Object_5.geometry} material={getMaterial(materials.donald_duck_mat)} skeleton={nodes.Object_5.skeleton} scale={0.01} />
-    </group>
-  )
+    return (
+        <group
+            {...props}
+            dispose={null}
+        >
+            <primitive object={nodes._rootJoint} />
+            <skinnedMesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Object_5.geometry}
+                material={getMaterial(materials.donald_duck_mat)}
+                skeleton={nodes.Object_5.skeleton}
+                scale={0.01}
+            />
+        </group>
+    );
 }
 
-useGLTF.preload('models/DonaldDuck-transformed.glb')
+useGLTF.preload("models/DonaldDuck-transformed.glb");

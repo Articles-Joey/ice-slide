@@ -1,7 +1,6 @@
 import { ModelKennyNLGraveyardRocksTall } from "@/components/Models/rocks-tall";
 
 function Rocks() {
-
     return (
         <group>
             <ModelKennyNLGraveyardRocksTall
@@ -21,8 +20,7 @@ function Rocks() {
                 position={[100, 0, 0]}
             />
         </group>
-    )
-
+    );
 }
 
 export default Rocks;

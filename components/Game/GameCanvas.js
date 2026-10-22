@@ -1,14 +1,22 @@
 import { memo } from "react";
 
-import { Canvas } from "@react-three/fiber"
-import { Sky, OrbitControls, Stats, Image, Environment } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import {
+    Sky,
+    OrbitControls,
+    Stats,
+    Image,
+    Environment,
+} from "@react-three/drei";
 
 import { Debug, Physics } from "@react-three/cannon";
 import { degToRad } from "three/src/math/MathUtils";
+import { PCFShadowMap } from "three";
 import WaterPlane from "./WaterPlane";
 import { ModelGoogleIglooOpen } from "@/components/Models/Igloo Open";
 import { ModelKennyNLMiniGolfFlagRed } from "@/components/Models/flag-red";
 import Icebergs from "./Icebergs";
+import IceWalls from "./IceWalls";
 // import GrassPlane from "./GrassPlane";
 import FlatRing from "./FlatRing";
 import Ground from "./Ground";
@@ -34,23 +42,27 @@ import SocketItems from "./SocketItems";
 import { ModelDonaldsBoat } from "../Models/DonaldsBoat";
 import { ModelDonaldDuck } from "../Models/DonaldDuck";
 
-function GameCanvas({
-    landingAnimationMode = false,
-}) {
-
-    const debug = useStore(state => state.debug);
-    const darkMode = useStore(state => state.darkMode)
-    const toontownMode = useStore(state => state.toontownMode);
+function GameCanvas({ landingAnimationMode = false }) {
+    const debug = useStore((state) => state.debug);
+    const darkMode = useStore((state) => state.darkMode);
+    const toontownMode = useStore((state) => state.toontownMode);
+    const graphicsQuality = useStore((state) => state.graphicsQuality);
+    const shadowSize = graphicsQuality === "Low" ? 1024 : 2048;
 
     return (
-        <Canvas camera={{ position: [-10, 100, 100], fov: 50 }}>
-
-            {process.env.NODE_ENV === 'development' &&
+        <Canvas
+            shadows={{ type: PCFShadowMap }}
+            camera={{ position: [-10, 100, 100], fov: 50, far: 3000 }}
+        >
+            {process.env.NODE_ENV === "development" && (
                 <>
-                    <axesHelper args={[50]} />
+                    <axesHelper
+                        args={[50]}
+                        position={[0, 1, 0]}
+                    />
                     <Stats className="stats-overlay" />
                 </>
-            }
+            )}
 
             {/* <fog attach="fog" args={['#ffffff', 100, 200]} /> */}
 
@@ -60,26 +72,55 @@ function GameCanvas({
 
             {/* <Environment preset="city" /> */}
 
-            {darkMode ?
+            {darkMode ? (
                 <>
                     <ambientLight intensity={0} />
-                    <spotLight intensity={10000} position={[0, 100, 0]} angle={5} penumbra={1} />
-
-                    <pointLight position={[-100, 30, -100]} color={"red"} intensity={10000} />
-
-                    <Sky
-                        sunPosition={[0, -1, 0]}
+                    <spotLight
+                        intensity={10000}
+                        position={[0, 100, 0]}
+                        angle={Math.PI / 3}
+                        penumbra={1}
+                        castShadow
+                        shadow-mapSize-width={shadowSize}
+                        shadow-mapSize-height={shadowSize}
+                        shadow-camera-near={1}
+                        shadow-camera-far={250}
+                        shadow-bias={-0.0001}
+                        shadow-normalBias={0.025}
+                        shadow-radius={2}
                     />
+
+                    <pointLight
+                        position={[-100, 30, -100]}
+                        color={"red"}
+                        intensity={10000}
+                    />
+
+                    <Sky sunPosition={[0, -1, 0]} />
                 </>
-                :
+            ) : (
                 <>
-                    <ambientLight intensity={2} />
-                    {/* <spotLight intensity={30000} position={[-50, 100, 50]} angle={5} penumbra={1} /> */}
-                    <Sky
-                        sunPosition={[0, 10, 0]}
+                    <ambientLight intensity={0.8} />
+                    <directionalLight
+                        position={[-100, 170, 70]}
+                        intensity={2.2}
+                        color="#f3f8ff"
+                        castShadow
+                        shadow-mapSize-width={shadowSize}
+                        shadow-mapSize-height={shadowSize}
+                        shadow-camera-left={-160}
+                        shadow-camera-right={160}
+                        shadow-camera-top={160}
+                        shadow-camera-bottom={-160}
+                        shadow-camera-near={1}
+                        shadow-camera-far={500}
+                        shadow-bias={-0.0001}
+                        shadow-normalBias={0.025}
+                        shadow-radius={2}
                     />
+                    <Sky sunPosition={[-100, 170, 70]} />
                 </>
-            }
+            )}
 
             {/* <pointLight position={[-10, -10, -10]} /> */}
 
@@ -97,11 +138,11 @@ function GameCanvas({
                 color={"white"}
             />
 
-            <WaterPlane
-                position={[0, 0, 0]}
-            />
+            <WaterPlane position={[0, 0, 0]} />
 
             <Icebergs />
+
+            <IceWalls />
 
             <Rocks />
 
@@ -125,46 +166,43 @@ function GameCanvas({
 
             <Penguins />
 
-            {toontownMode ?
+            {toontownMode ? (
                 <>
                     <ModelDonaldsBoat
                         position={[-100, 2, -120]}
                         scale={300}
                         rotation={[0, degToRad(140), 0]}
                     />
-                    <ModelDonaldDuck 
+                    <ModelDonaldDuck
                         position={[-110, 14, -100]}
                         scale={1500}
                         rotation={[0, degToRad(45), 0]}
                     />
                 </>
-                :
+            ) : (
                 <ModelBoat
                     position={[-90, 2, -90]}
                     scale={0.06}
                     rotation={[0, degToRad(45), 0]}
                 />
-            }
+            )}
 
             <WalrusWithLogic
                 position={[0, 31.25, 100]}
                 scale={0.01}
             />
 
-            {toontownMode ?
-                <ModelCogFixed
-                    position={[0, 29.5, -100]}
-                />
-                :
-                <ModelSnowman
-                    position={[0, 31.25, -100]}
-                />
-            }
+            {toontownMode ? (
+                <ModelCogFixed position={[0, 29.5, -100]} />
+            ) : (
+                <ModelSnowman position={[0, 31.25, -100]} />
+            )}
 
             <Physics>
-
-                <Debug color="black" scale={debug ? 1 : 0}>
-
+                <Debug
+                    color="black"
+                    scale={debug ? 1 : 0}
+                >
                     {/* Offline controlled player */}
                     {/* <PlayerProjectile /> */}
 
@@ -196,13 +234,10 @@ function GameCanvas({
                     <Ground />
 
                     <Walls />
-
                 </Debug>
-
             </Physics>
-
         </Canvas>
-    )
+    );
 }
 
-export default memo(GameCanvas)
+export default memo(GameCanvas);

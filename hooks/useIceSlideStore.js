@@ -1,7 +1,7 @@
-"use client"
+"use client";
 // import { create } from 'zustand'
-import { createWithEqualityFn as create } from 'zustand/traditional'
-import { persist } from 'zustand/middleware'
+import { createWithEqualityFn as create } from "zustand/traditional";
+import { persist } from "zustand/middleware";
 // import { nanoid } from 'nanoid'
 
 // const getLocalStorage = (key) => JSON.parse(window.localStorage.getItem(key))
@@ -9,39 +9,38 @@ import { persist } from 'zustand/middleware'
 
 // export const useIceSlideStore = create((set) => ({
 export const useIceSlideStore = create((set) => ({
-
     players: [],
     setPlayers: (newValue) => {
         set((prev) => ({
-            players: newValue
-        }))
+            players: newValue,
+        }));
     },
     launchPlayers: false,
     setLaunchPlayers: (newValue) => {
         set((prev) => ({
-            launchPlayers: newValue
-        }))
+            launchPlayers: newValue,
+        }));
     },
 
     items: [],
     setItems: (newValue) => {
         set((prev) => ({
-            items: newValue
-        }))
+            items: newValue,
+        }));
     },
 
     gameState: {},
     setGameState: (newValue) => {
         set((prev) => ({
-            gameState: newValue
-        }))
+            gameState: newValue,
+        }));
     },
 
     launchPlayer: false,
     setLaunchPlayer: (newValue) => {
         set((prev) => ({
-            launchPlayer: newValue
-        }))
+            launchPlayer: newValue,
+        }));
     },
 
     // Mouse and Keyboard
@@ -49,29 +48,28 @@ export const useIceSlideStore = create((set) => ({
     controlType: "Mouse and Keyboard",
     setControlType: (newValue) => {
         set((prev) => ({
-            controlType: newValue
-        }))
+            controlType: newValue,
+        }));
     },
 
     music: false,
     setMusic: (newValue) => {
         set((prev) => ({
-            music: newValue
-        }))
+            music: newValue,
+        }));
     },
 
     hitRotation: 0,
     setHitRotation: (newValue) => {
         set((prev) => ({
-            hitRotation: newValue
-        }))
+            hitRotation: newValue,
+        }));
     },
 
     hitPower: 0,
     setHitPower: (newValue) => {
         set((prev) => ({
-            hitPower: newValue
-        }))
+            hitPower: newValue,
+        }));
     },
-
-}))
+}));

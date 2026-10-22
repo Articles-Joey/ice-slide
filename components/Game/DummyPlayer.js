@@ -9,16 +9,23 @@ import { ModelToonDogHead } from "../Models/ToonDogHead";
 import { useStore } from "@/hooks/useStore";
 import { useGameStore } from "@/hooks/useGameStore";
 
-function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socketId, playerId }) {
+function DummyPlayer({
+    position,
+    hitPower,
+    hitRotation,
+    nickname,
+    server,
+    socketId,
+    playerId,
+}) {
+    const launchPlayers = useIceSlideStore((state) => state.launchPlayers);
 
-    const launchPlayers = useIceSlideStore(state => state.launchPlayers)
+    const puckRef = useRef();
+    const lastProcessedLaunch = useRef(0);
+    const positionRef = useRef(position);
 
-    const puckRef = useRef()
-    const lastProcessedLaunch = useRef(0)
-    const positionRef = useRef(position)
-
-    const toontownMode = useStore(state => state.toontownMode);
-    const debug = useStore(state => state.debug);
+    const toontownMode = useStore((state) => state.toontownMode);
+    const debug = useStore((state) => state.debug);
 
     const [ref, api] = useCylinder(() => ({
         mass: 10,
@@ -27,15 +34,18 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
         position: position,
         linearDamping: 0.4,
         angularDamping: 0.3,
-        linearFactor: [1, 0, 1],   // prevent Y-axis launch on collision
-        angularFactor: [0, 1, 0],  // prevent tumbling, only allow Y-axis spin
-    }))
+        linearFactor: [1, 0, 1], // prevent Y-axis launch on collision
+        angularFactor: [0, 1, 0], // prevent tumbling, only allow Y-axis spin
+    }));
 
     useEffect(() => {
-
         if (launchPlayers && launchPlayers > lastProcessedLaunch.current) {
-
-            console.log("Launching player with hitPower:", hitPower, "and hitRotation:", hitRotation)
+            console.log(
+                "Launching player with hitPower:",
+                hitPower,
+                "and hitRotation:",
+                hitRotation,
+            );
 
             lastProcessedLaunch.current = launchPlayers;
             const angle = (hitRotation * Math.PI) / 180;
@@ -43,8 +53,7 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
             const vz = Math.cos(angle) * hitPower;
             api.velocity.set(vx, 0, vz);
         }
-
-    }, [launchPlayers, hitPower, hitRotation])
+    }, [launchPlayers, hitPower, hitRotation]);
 
     useEffect(() => {
         if (!socketId || playerId !== socketId) return;
@@ -52,9 +61,11 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
             const gameState = useGameStore.getState().gameState;
             if (gameState.status !== "In Progress") return;
             const [x, y, z] = positionRef.current;
-            useSocketStore.getState().socket?.emit('game:ice-slide:position', {
+            useSocketStore.getState().socket?.emit("game:ice-slide:position", {
                 socketId,
-                x, y, z,
+                x,
+                y,
+                z,
                 server,
                 gameStarted: gameState.gameStarted,
             });
@@ -81,20 +92,22 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
 
     return (
         <group>
-
-            <mesh ref={ref} castShadow>
-
-                {debug &&
+            <mesh
+                ref={ref}
+                castShadow
+            >
+                {debug && (
                     <>
                         <cylinderGeometry args={[3, 3, 1, 32]} />
                         <meshStandardMaterial color="red" />
                     </>
-                }
-
+                )}
             </mesh>
 
-            <group ref={puckRef} rotation={[0, (hitRotation * Math.PI) / 180, 0]}>
-
+            <group
+                ref={puckRef}
+                rotation={[0, (hitRotation * Math.PI) / 180, 0]}
+            >
                 <Billboard>
                     <Text
                         position={[0, 5, 0]}
@@ -113,18 +126,20 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
                     position={[0, -1.1, 0]}
                 />
 
-                {toontownMode &&
+                {toontownMode && (
                     <ModelToonDogHead
                         scale={0.25}
                         position={[-0, 1.5, -0.75]}
                     />
-                }
+                )}
 
                 {/* Direction Arrow */}
-                <mesh castShadow position={[0, 0, (hitPower / 2)]} rotation={[-Math.PI / 2, 0, 0]}>
-                    <cylinderGeometry
-                        args={[0.5, 0.5, hitPower]}
-                    />
+                <mesh
+                    castShadow
+                    position={[0, 0, hitPower / 2]}
+                    rotation={[-Math.PI / 2, 0, 0]}
+                >
+                    <cylinderGeometry args={[0.5, 0.5, hitPower]} />
                     <meshStandardMaterial color="black" />
 
                     <mesh
@@ -132,19 +147,13 @@ function DummyPlayer({ position, hitPower, hitRotation, nickname, server, socket
                         position={[0, -(hitPower / 2), 0]}
                         rotation={[0, 0, 0]}
                     >
-                        <cylinderGeometry
-                            args={[3, 0, 5]}
-                        />
+                        <cylinderGeometry args={[3, 0, 5]} />
                         <meshStandardMaterial color="black" />
                     </mesh>
-
                 </mesh>
-
             </group>
-
         </group>
-    )
-
+    );
 }
 
 export default DummyPlayer;
