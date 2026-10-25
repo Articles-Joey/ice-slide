@@ -6,9 +6,12 @@ Files: Wheel.glb [26.67KB] > F:\My Documents\Sites games\ice-slide\public\models
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelWheel(props) {
-    const { nodes, materials } = useGLTF("models/Wheel-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Wheel-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -25,4 +28,4 @@ export function ModelWheel(props) {
     );
 }
 
-useGLTF.preload("models/Wheel-transformed.glb");
+useGLTF.preload(getAssetSource("models/Wheel-transformed.glb"));

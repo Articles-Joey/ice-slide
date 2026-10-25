@@ -10,9 +10,12 @@ Title: Dog Head
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelToonDogHead(props) {
-    const { nodes, materials } = useGLTF("models/ToonDogHead-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/ToonDogHead-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -28,4 +31,4 @@ export function ModelToonDogHead(props) {
     );
 }
 
-useGLTF.preload("models/ToonDogHead-transformed.glb");
+useGLTF.preload(getAssetSource("models/ToonDogHead-transformed.glb"));

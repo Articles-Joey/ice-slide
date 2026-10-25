@@ -6,9 +6,12 @@ Files: Bear.glb [40.84KB] > F:\My Documents\Sites games\ice-slide\public\models\
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelBear(props) {
-    const { nodes, materials } = useGLTF("models/Bear-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Bear-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -24,4 +27,4 @@ export function ModelBear(props) {
     );
 }
 
-useGLTF.preload("models/Bear-transformed.glb");
+useGLTF.preload(getAssetSource("models/Bear-transformed.glb"));

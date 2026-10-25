@@ -6,10 +6,11 @@ Files: Inflatable Water Tube.glb [152.94KB] > F:\My Documents\Sites games\ice-sl
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelInflatableWaterTube(props) {
     const { nodes, materials } = useGLTF(
-        "models/Inflatable Water Tube-transformed.glb",
+        getAssetSource("models/Inflatable Water Tube-transformed.glb"),
     );
     return (
         <group
@@ -32,4 +33,4 @@ export function ModelInflatableWaterTube(props) {
     );
 }
 
-useGLTF.preload("models/Inflatable Water Tube-transformed.glb");
+useGLTF.preload(getAssetSource("models/Inflatable Water Tube-transformed.glb"));

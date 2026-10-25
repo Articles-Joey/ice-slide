@@ -6,9 +6,12 @@ Files: Snowman.glb [116.53KB] > F:\My Documents\Sites games\ice-slide\public\mod
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelSnowman(props) {
-    const { nodes, materials } = useGLTF("models/Snowman-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Snowman-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -27,4 +30,4 @@ export function ModelSnowman(props) {
     );
 }
 
-useGLTF.preload("models/Snowman-transformed.glb");
+useGLTF.preload(getAssetSource("models/Snowman-transformed.glb"));

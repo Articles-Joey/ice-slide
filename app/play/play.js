@@ -17,6 +17,9 @@ import GameOverModal from "@/components/UI/GameOverModal";
 import GameMenu from "@articles-media/articles-dev-box/GameMenu";
 import classNames from "classnames";
 import { useGameStore } from "@/hooks/useGameStore";
+import { useSinglePlayerStore } from "@/hooks/useSinglePlayerStore";
+import SinglePlayerPanel from "@/components/UI/SinglePlayerPanel";
+import useTouchControlsStore from "@/hooks/useTouchControlsStore";
 
 const GameCanvas = dynamic(() => import("@/components/Game/GameCanvas"), {
     ssr: false,
@@ -30,6 +33,9 @@ export default function IceSlideGamePage() {
     const searchParams = useSearchParams();
     const params = Object.fromEntries(searchParams.entries());
     const { server } = params;
+    const singlePlayer = !server;
+
+    const enabled = useTouchControlsStore((state) => state.enabled);
 
     const nickname = useStore((state) => state.nickname);
     const sidebar = useStore((state) => state.sidebar);
@@ -38,6 +44,21 @@ export default function IceSlideGamePage() {
 
     // const showGameOverModal = useStore(state => state.showGameOverModal)
     const status = useGameStore((state) => state.gameState.status);
+    const singlePlayerResult = useSinglePlayerStore((state) => state.result);
+    const showSinglePlayerResults = useSinglePlayerStore(
+        (state) => state.showResults,
+    );
+
+    useEffect(() => {
+        if (server) return;
+        useSinglePlayerStore
+            .getState()
+            .createLobby(useStore.getState().nickname);
+        return () => useSinglePlayerStore.getState().reset();
+    }, [server, sceneKey]);
+
+    const restartSinglePlayer = () =>
+        useSinglePlayerStore.getState().startGame(useStore.getState().nickname);
 
     useEffect(() => {
         if (server && socket.connected) {
@@ -69,7 +90,16 @@ export default function IceSlideGamePage() {
             )}
             id={`${process.env.NEXT_PUBLIC_GAME_KEY}-game-page`}
         >
-            {status === "Game Over" && (
+            {singlePlayer && singlePlayerResult && (
+                <GameOverModal
+                    show={showSinglePlayerResults}
+                    setShow={useSinglePlayerStore.getState().setResultsOpen}
+                    singlePlayerResult={singlePlayerResult}
+                    onPlayAgain={restartSinglePlayer}
+                />
+            )}
+
+            {!singlePlayer && status === "Game Over" && (
                 <GameOverModal
                     show={true}
                     setShow={useStore.getState().setShowGameOverModal}
@@ -103,9 +133,14 @@ export default function IceSlideGamePage() {
                     },
                 }}
             >
-                <TouchControls />
+                {/* {singlePlayer && <SinglePlayerPanel />} */}
 
-                <GameCanvas key={sceneKey} />
+                {enabled && <TouchControls />}
+
+                <GameCanvas
+                    key={`${server || "single-player"}:${sceneKey}`}
+                    singlePlayer={singlePlayer}
+                />
             </Box>
         </Box>
     );

@@ -12,9 +12,14 @@ import { useStore } from "@/hooks/useStore";
 import ArticlesButton from "./Button";
 import GameDetailsPanel from "./GameDetailsPanel";
 import DebugPanel from "./DebugPanel";
+import SinglePlayerPanel, {
+    SinglePlayerMenu,
+} from "@/components/UI/SinglePlayerPanel";
 
 export default function LeftPanelContent() {
     const server = useSearchParams().get("server");
+    const singlePlayer = !server;
+
     const debug = useStore((state) => state.debug);
     const socket = useSocketStore((state) => state.socket);
     const connected = useSocketStore((state) => state.connected);
@@ -22,7 +27,10 @@ export default function LeftPanelContent() {
     const players = useGameStore((state) => state.gameState.players);
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Box
+            sx={{ width: "100%" }}
+            className="side-menu"
+        >
             <Card
                 sx={{
                     bgcolor: "game.card",
@@ -33,6 +41,7 @@ export default function LeftPanelContent() {
                 }}
             >
                 <CardContent sx={{ p: 1, "&:last-child": { pb: 1 } }}>
+                    {/* GameMenuPrimaryButtonGroup */}
                     <Box sx={{ display: "flex", flexWrap: "wrap", mb: 2 }}>
                         <GameMenuPrimaryButtonGroup
                             useStore={useStore}
@@ -40,33 +49,39 @@ export default function LeftPanelContent() {
                             useRouter={useRouter}
                         />
                     </Box>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Box>Server: {server}</Box>
-                        <Box>Players: {players?.length || 0}/4</Box>
-                    </Box>
-                    {(status === "In Lobby" || status === "Game Over") && (
-                        <ArticlesButton
-                            sx={{ width: "100%", mt: 2 }}
-                            disabled={!server || !connected}
-                            onClick={() =>
-                                socket?.emit(
-                                    `game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`,
-                                    {
-                                        server_id: server,
-                                    },
-                                )
-                            }
+
+                    {server && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
                         >
-                            Start Game
-                        </ArticlesButton>
+                            <Box>Server: {server}</Box>
+                            <Box>Players: {players?.length || 0}/4</Box>
+                        </Box>
                     )}
-                    {!connected && (
+
+                    {server &&
+                        (status === "In Lobby" || status === "Game Over") && (
+                            <ArticlesButton
+                                sx={{ width: "100%", mt: 2 }}
+                                disabled={!server || !connected}
+                                onClick={() =>
+                                    socket?.emit(
+                                        `game:${process.env.NEXT_PUBLIC_GAME_KEY}:start-game`,
+                                        {
+                                            server_id: server,
+                                        },
+                                    )
+                                }
+                            >
+                                Start Game
+                            </ArticlesButton>
+                        )}
+
+                    {server && !connected && (
                         <Box sx={{ mb: 2 }}>
                             <Typography
                                 variant="subtitle1"
@@ -82,9 +97,13 @@ export default function LeftPanelContent() {
                             </ArticlesButton>
                         </Box>
                     )}
+
+                    {!server && <SinglePlayerMenu />}
+
+                    {singlePlayer && <SinglePlayerPanel />}
                 </CardContent>
             </Card>
-            <GameDetailsPanel />
+            <GameDetailsPanel singlePlayer={!server} />
             {debug && <DebugPanel />}
         </Box>
     );

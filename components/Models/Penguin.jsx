@@ -6,9 +6,12 @@ Files: Penguin.glb [31.51KB] > F:\My Documents\Sites games\ice-slide\public\mode
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelPenguin(props) {
-    const { nodes, materials } = useGLTF("models/Penguin-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Penguin-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -24,4 +27,4 @@ export function ModelPenguin(props) {
     );
 }
 
-useGLTF.preload("models/Penguin-transformed.glb");
+useGLTF.preload(getAssetSource("models/Penguin-transformed.glb"));

@@ -6,9 +6,12 @@ Files: Boat.glb [247.21KB] > F:\My Documents\Sites games\ice-slide\public\models
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelBoat(props) {
-    const { nodes, materials } = useGLTF("models/Boat-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Boat-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -24,4 +27,4 @@ export function ModelBoat(props) {
     );
 }
 
-useGLTF.preload("models/Boat-transformed.glb");
+useGLTF.preload(getAssetSource("models/Boat-transformed.glb"));

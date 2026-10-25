@@ -3,11 +3,12 @@ import { useEffect } from "react";
 import { useGameControls } from "@/hooks/useGameControls";
 import { useSearchParams } from "next/navigation";
 
-export default function ControlsHandler() {
+export default function ControlsHandler({ actions: localActions } = {}) {
     const searchParams = useSearchParams();
     const { server } = Object.fromEntries(searchParams.entries());
 
-    const actions = useGameControls({ server });
+    const multiplayerActions = useGameControls({ server });
+    const actions = localActions || multiplayerActions;
 
     useEffect(() => {
         const heldKeys = new Set();
@@ -35,7 +36,25 @@ export default function ControlsHandler() {
 
         const onKeyDown = (e) => {
             const key = e.key.toLowerCase();
+            if (localActions) {
+                if (
+                    e.target.isContentEditable ||
+                    e.target.closest?.(
+                        "input, textarea, select, [role='slider']",
+                    )
+                )
+                    return;
+                if (
+                    (key === "enter" || key === " ") &&
+                    e.target.closest?.("button")
+                )
+                    return;
+            }
             if (key === "enter" || key === " ") {
+                if (localActions) {
+                    e.preventDefault();
+                    if (e.repeat) return;
+                }
                 actions.launch();
                 return;
             }
@@ -50,15 +69,23 @@ export default function ControlsHandler() {
             heldKeys.delete(e.key.toLowerCase());
         };
 
+        const onBlur = () => {
+            heldKeys.clear();
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = null;
+        };
+
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("keyup", onKeyUp);
+        window.addEventListener("blur", onBlur);
 
         return () => {
             window.removeEventListener("keydown", onKeyDown);
             window.removeEventListener("keyup", onKeyUp);
+            window.removeEventListener("blur", onBlur);
             if (rafId) cancelAnimationFrame(rafId);
         };
-    }, [actions]);
+    }, [actions, localActions]);
 
     return <></>;
 }

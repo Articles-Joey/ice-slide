@@ -41,28 +41,37 @@ import { ModelCogFixed } from "../Models/CogFixed";
 import SocketItems from "./SocketItems";
 import { ModelDonaldsBoat } from "../Models/DonaldsBoat";
 import { ModelDonaldDuck } from "../Models/DonaldDuck";
+import SinglePlayerGame from "./SinglePlayerGame";
+import { singlePlayerActions } from "@/hooks/useSinglePlayerStore";
 
-function GameCanvas({ landingAnimationMode = false }) {
+function GameCanvas({ landingAnimationMode = false, singlePlayer = false }) {
     const debug = useStore((state) => state.debug);
+    const showPhysicsDebug = useStore(
+        (state) => state?.debugConfig?.showPhysicsDebug,
+    );
+    const showStats = useStore((state) => state?.debugConfig?.showStats);
     const darkMode = useStore((state) => state.darkMode);
     const toontownMode = useStore((state) => state.toontownMode);
     const graphicsQuality = useStore((state) => state.graphicsQuality);
+
     const shadowSize = graphicsQuality === "Low" ? 1024 : 2048;
+    const localGame = singlePlayer && !landingAnimationMode;
 
     return (
         <Canvas
             shadows={{ type: PCFShadowMap }}
             camera={{ position: [-10, 100, 100], fov: 50, far: 3000 }}
         >
-            {process.env.NODE_ENV === "development" && (
+            {showPhysicsDebug && (
                 <>
                     <axesHelper
                         args={[50]}
                         position={[0, 1, 0]}
                     />
-                    <Stats className="stats-overlay" />
                 </>
             )}
+
+            {showStats && <Stats className="stats-overlay" />}
 
             {/* <fog attach="fog" args={['#ffffff', 100, 200]} /> */}
 
@@ -126,7 +135,11 @@ function GameCanvas({ landingAnimationMode = false }) {
 
             <LogoCube />
 
-            {!landingAnimationMode && <ControlsHandler />}
+            {!landingAnimationMode && (
+                <ControlsHandler
+                    actions={localGame ? singlePlayerActions : undefined}
+                />
+            )}
 
             <FlatRing
                 args={[3, 5, 32]}
@@ -201,13 +214,19 @@ function GameCanvas({ landingAnimationMode = false }) {
             <Physics>
                 <Debug
                     color="black"
-                    scale={debug ? 1 : 0}
+                    scale={showPhysicsDebug ? 1 : 0}
                 >
                     {/* Offline controlled player */}
                     {/* <PlayerProjectile /> */}
 
-                    <SocketPlayers />
-                    <SocketItems />
+                    {localGame ? (
+                        <SinglePlayerGame />
+                    ) : (
+                        <>
+                            <SocketPlayers />
+                            <SocketItems />
+                        </>
+                    )}
 
                     {/* Now server side */}
                     {/* <Barrel

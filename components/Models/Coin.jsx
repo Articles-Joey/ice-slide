@@ -6,13 +6,16 @@ Files: Coin.glb [13.81KB] > F:\My Documents\Sites games\ice-slide\public\models\
 
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { useFrame } from "@react-three/fiber";
 import { useStore } from "@/hooks/useStore";
 
 export function ModelCoin(props) {
     const darkMode = useStore((state) => state.darkMode);
 
-    const { nodes, materials } = useGLTF("models/Coin-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Coin-transformed.glb"),
+    );
     const groupRef = useRef();
     const randomOffset = useRef(Math.random() * Math.PI * 2);
 
@@ -67,4 +70,4 @@ export function ModelCoin(props) {
     );
 }
 
-useGLTF.preload("models/Coin-transformed.glb");
+useGLTF.preload(getAssetSource("models/Coin-transformed.glb"));

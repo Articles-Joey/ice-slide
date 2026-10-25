@@ -7,12 +7,15 @@ Files: CogFixed.glb [13.02MB] > F:\My Documents\Sites games\ice-slide\public\mod
 import React, { useEffect, useState } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { SkeletonUtils } from "three-stdlib";
 import * as THREE from "three";
 
 export function ModelCogFixed(props) {
     const group = React.useRef();
-    const { scene, animations } = useGLTF("models/CogFixed-transformed.glb");
+    const { scene, animations } = useGLTF(
+        getAssetSource("models/CogFixed-transformed.glb"),
+    );
     const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
     const { nodes, materials } = useGraph(clone);
     const { actions, mixer } = useAnimations(animations, group);
@@ -128,4 +131,4 @@ export function ModelCogFixed(props) {
     );
 }
 
-useGLTF.preload("models/CogFixed-transformed.glb");
+useGLTF.preload(getAssetSource("models/CogFixed-transformed.glb"));

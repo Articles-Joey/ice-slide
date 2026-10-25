@@ -7,9 +7,42 @@ import Chip from "@mui/material/Chip";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import UndoIcon from "@mui/icons-material/Undo";
 import { useGameStore } from "@/hooks/useGameStore";
+import { useSinglePlayerStore } from "@/hooks/useSinglePlayerStore";
 
-export default function GameDetailsPanel() {
-    const players = useGameStore((state) => state.gameState.players);
+export default function GameDetailsPanel({ singlePlayer = false }) {
+    return singlePlayer ? (
+        <SinglePlayerGameDetails />
+    ) : (
+        <MultiplayerGameDetails />
+    );
+}
+
+function MultiplayerGameDetails() {
+    const gameState = useGameStore((state) => state.gameState);
+    return <GameDetailsContent gameState={gameState} />;
+}
+
+function SinglePlayerGameDetails() {
+    const state = useSinglePlayerStore();
+    const gameState = {
+        status: state.status,
+        round: state.round,
+        timer: state.phase === "aiming" ? state.timer : 0,
+        players: state.players.map((player) => ({
+            ...player,
+            position: { x: player.position[0], z: player.position[2] },
+            hitRotation: player.isBot ? player.hitRotation : state.hitRotation,
+            hitPower: player.isBot ? player.hitPower : state.hitPower,
+            ready: player.isBot
+                ? state.status !== "In Lobby"
+                : ["sliding", "round-over", "complete"].includes(state.phase),
+        })),
+    };
+    return <GameDetailsContent gameState={gameState} />;
+}
+
+function GameDetailsContent({ gameState }) {
+    const players = gameState.players;
 
     return (
         <Card
@@ -29,7 +62,7 @@ export default function GameDetailsPanel() {
                         justifyContent: "space-between",
                     }}
                 >
-                    <RoundAndTimer />
+                    <RoundAndTimer gameState={gameState} />
                 </Box>
                 <Box>Players</Box>
                 {players?.map((player, index) => (
@@ -67,7 +100,7 @@ export default function GameDetailsPanel() {
                                     }}
                                 >
                                     <RocketLaunchIcon fontSize="small" />
-                                    {player.hitPower}
+                                    {player.hitPower?.toFixed(2)}
                                 </Box>
                                 <Box
                                     sx={{
@@ -77,7 +110,7 @@ export default function GameDetailsPanel() {
                                     }}
                                 >
                                     <UndoIcon fontSize="small" />
-                                    {player.hitRotation}
+                                    {player.hitRotation?.toFixed(2)}
                                 </Box>
                             </Box>
                         </Box>
@@ -88,8 +121,7 @@ export default function GameDetailsPanel() {
     );
 }
 
-function RoundAndTimer() {
-    const gameState = useGameStore((state) => state.gameState);
+function RoundAndTimer({ gameState }) {
     return (
         <Box sx={{ width: "100%" }}>
             <Box

@@ -11,13 +11,14 @@ Title: Pluto
 import React from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { SkeletonUtils } from "three-stdlib";
 import { useStore } from "@/hooks/useStore";
 
 export function ModelPluto(props) {
     const darkMode = useStore((state) => state.darkMode);
 
-    const { scene } = useGLTF("models/Pluto-transformed.glb");
+    const { scene } = useGLTF(getAssetSource("models/Pluto-transformed.glb"));
     const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
     const { nodes, materials } = useGraph(clone);
     // Helper to darken material if darkMode
@@ -48,4 +49,4 @@ export function ModelPluto(props) {
     );
 }
 
-useGLTF.preload("models/Pluto-transformed.glb");
+useGLTF.preload(getAssetSource("models/Pluto-transformed.glb"));

@@ -6,9 +6,12 @@ Files: Barrel.glb [25.22KB] > F:\My Documents\Sites games\ice-slide\public\model
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 
 export function ModelBarrel(props) {
-    const { nodes, materials } = useGLTF("models/Barrel-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Barrel-transformed.glb"),
+    );
     return (
         <group
             {...props}
@@ -30,4 +33,4 @@ export function ModelBarrel(props) {
     );
 }
 
-useGLTF.preload("models/Barrel-transformed.glb");
+useGLTF.preload(getAssetSource("models/Barrel-transformed.glb"));

@@ -6,6 +6,7 @@ Files: Iceberg.glb [58.81KB] > F:\My Documents\Sites games\ice-slide\public\mode
 
 import React, { useRef, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { useFrame } from "@react-three/fiber";
 import { useStore } from "@/hooks/useStore";
 
@@ -13,7 +14,9 @@ export function ModelIceberg({ bobHeight = 2, ...props }) {
     const graphicsQuality = useStore((state) => state.graphicsQuality);
 
     const group = useRef();
-    const { nodes, materials } = useGLTF("models/Iceberg-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/Iceberg-transformed.glb"),
+    );
     // Random phase offset so each instance bobs out of sync
     const phase = useMemo(() => Math.random() * Math.PI * 2, []);
     useFrame((state) => {
@@ -39,4 +42,4 @@ export function ModelIceberg({ bobHeight = 2, ...props }) {
     );
 }
 
-useGLTF.preload("models/Iceberg-transformed.glb");
+useGLTF.preload(getAssetSource("models/Iceberg-transformed.glb"));

@@ -10,12 +10,15 @@ Title: donalds_boat
 
 import React from "react";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { useStore } from "@/hooks/useStore";
 
 export function ModelDonaldsBoat(props) {
     const darkMode = useStore((state) => state.darkMode);
 
-    const { nodes, materials } = useGLTF("models/DonaldsBoat-transformed.glb");
+    const { nodes, materials } = useGLTF(
+        getAssetSource("models/DonaldsBoat-transformed.glb"),
+    );
     // Helper to darken material if darkMode
     function getMaterial(mat) {
         if (!darkMode) return mat;
@@ -167,4 +170,4 @@ export function ModelDonaldsBoat(props) {
     );
 }
 
-useGLTF.preload("models/DonaldsBoat-transformed.glb");
+useGLTF.preload(getAssetSource("models/DonaldsBoat-transformed.glb"));

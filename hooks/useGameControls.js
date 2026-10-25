@@ -17,23 +17,10 @@ export function useGameControls({ server } = {}) {
 
     useEffect(
         () =>
-            useIceSlideStore.subscribe(
-                (state) => state.hitRotation,
-                (val) => {
-                    hitRotationRef.current = val;
-                },
-            ),
-        [],
-    );
-
-    useEffect(
-        () =>
-            useIceSlideStore.subscribe(
-                (state) => state.hitPower,
-                (val) => {
-                    hitPowerRef.current = val;
-                },
-            ),
+            useIceSlideStore.subscribe((state) => {
+                hitRotationRef.current = state.hitRotation;
+                hitPowerRef.current = state.hitPower;
+            }),
         [],
     );
 
@@ -106,13 +93,13 @@ export function useGameControls({ server } = {}) {
  * Usage:
  *   <button {...useHeldAction(actions.rotateRight)} />
  */
-export function useHeldAction(action) {
+export function useHeldAction(action, { disabled = false } = {}) {
     const rafRef = useRef(null);
     const actionRef = useRef(action);
     actionRef.current = action;
 
     const stop = useCallback(() => {
-        if (rafRef.current) {
+        if (rafRef.current !== null) {
             cancelAnimationFrame(rafRef.current);
             rafRef.current = null;
         }
@@ -120,7 +107,11 @@ export function useHeldAction(action) {
 
     const start = useCallback(
         (e) => {
+            if (disabled || (e.pointerType === "mouse" && e.button !== 0))
+                return;
+            e.preventDefault();
             stop();
+            e.currentTarget.setPointerCapture?.(e.pointerId);
             actionRef.current();
             const loop = () => {
                 actionRef.current();
@@ -128,8 +119,28 @@ export function useHeldAction(action) {
             };
             rafRef.current = requestAnimationFrame(loop);
         },
-        [stop],
+        [stop, disabled],
     );
+
+    useEffect(() => {
+        if (disabled) stop();
+    }, [disabled, stop]);
+
+    useEffect(() => {
+        const onVisibilityChange = () => {
+            if (document.hidden) stop();
+        };
+        window.addEventListener("blur", stop);
+        document.addEventListener("visibilitychange", onVisibilityChange);
+        return () => {
+            stop();
+            window.removeEventListener("blur", stop);
+            document.removeEventListener(
+                "visibilitychange",
+                onVisibilityChange,
+            );
+        };
+    }, [stop]);
 
     return useMemo(
         () => ({
@@ -137,7 +148,11 @@ export function useHeldAction(action) {
             onPointerUp: stop,
             onPointerLeave: stop,
             onPointerCancel: stop,
+            onLostPointerCapture: stop,
+            onClick: (event) => {
+                if (!disabled && event.detail === 0) actionRef.current();
+            },
         }),
-        [start, stop],
+        [start, stop, disabled],
     );
 }

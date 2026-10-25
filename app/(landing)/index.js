@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import PageTemplateLandingPage from "@articles-media/articles-dev-box/PageTemplateLandingPage";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { useSocketStore } from "@/hooks/useSocketStore";
 import { useStore } from "@/hooks/useStore";
 import RotatingMascot from "@/components/UI/RotatingMascot";
@@ -110,7 +111,10 @@ export default function IceSlideLobbyPage() {
                         />
                     </Box>
                 }
-                backgroundImage={`${process.env.NEXT_PUBLIC_CDN}games/Ice Slide/ice-slide-background.jpg`}
+                backgroundImage={getAssetSource(
+                    "img/ice-slide-landing-background.webp",
+                )}
+                singlePlayerConfig={{ attachServerType: "single-player" }}
                 multiplayerConfig={{
                     type: "WebSocket",
                     defaultServers: 2,

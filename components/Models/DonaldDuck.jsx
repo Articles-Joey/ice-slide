@@ -11,13 +11,16 @@ Title: Donald Duck
 import React from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import getAssetSource from "@articles-media/articles-dev-box/getAssetSource";
 import { SkeletonUtils } from "three-stdlib";
 import { useStore } from "@/hooks/useStore";
 
 export function ModelDonaldDuck(props) {
     const darkMode = useStore((state) => state.darkMode);
 
-    const { scene } = useGLTF("models/DonaldDuck-transformed.glb");
+    const { scene } = useGLTF(
+        getAssetSource("models/DonaldDuck-transformed.glb"),
+    );
     const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
     const { nodes, materials } = useGraph(clone);
 
@@ -48,4 +51,4 @@ export function ModelDonaldDuck(props) {
     );
 }
 
-useGLTF.preload("models/DonaldDuck-transformed.glb");
+useGLTF.preload(getAssetSource("models/DonaldDuck-transformed.glb"));
